@@ -267,6 +267,26 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 - [CMU 15-213 Fall 2015 課表（對應 CSAPP 章節）](https://www.cs.cmu.edu/afs/cs/academic/class/15213-f15/www/schedule.html)
 - [CMU CSAPP 15-213 中英字幕（YouTube 非官方轉載）](https://www.youtube.com/playlist?list=PL22J-I2Pi-Gf0s1CGDVtt4vuvlyjLxfem)
 
+## Lab 下載總覽
+
+連結於 2026/10/30 驗證過（CS:APP 皆取自 [csapp.cs.cmu.edu/3e/labs.html](https://csapp.cs.cmu.edu/3e/labs.html) 的自學版）。
+
+| Lab | 週次 | 下載 |
+|---|---|---|
+| Data Lab | W1、W2 | [datalab-handout.tar](https://csapp.cs.cmu.edu/3e/datalab-handout.tar)<br>[datalab.pdf（writeup）](https://csapp.cs.cmu.edu/3e/datalab.pdf) |
+| Bomb Lab | W3、W4 | [bomb.tar](https://csapp.cs.cmu.edu/3e/bomb.tar)<br>[bomblab.pdf（writeup）](https://csapp.cs.cmu.edu/3e/bomblab.pdf) |
+| Attack Lab | W5 | [target1.tar](https://csapp.cs.cmu.edu/3e/target1.tar)<br>[attacklab.pdf（writeup）](https://csapp.cs.cmu.edu/3e/attacklab.pdf) |
+| Cache Lab | W6、W7 | [cachelab-handout.tar](https://csapp.cs.cmu.edu/3e/cachelab-handout.tar)<br>[cachelab.pdf（writeup）](https://csapp.cs.cmu.edu/3e/cachelab.pdf) |
+| Shell Lab | W8、W9 | [shlab-handout.tar](https://csapp.cs.cmu.edu/3e/shlab-handout.tar)<br>[shlab.pdf（writeup）](https://csapp.cs.cmu.edu/3e/shlab.pdf) |
+| Malloc Lab | W10、W11 | [malloclab-handout.tar](https://csapp.cs.cmu.edu/3e/malloclab-handout.tar)<br>[malloclab.pdf（writeup）](https://csapp.cs.cmu.edu/3e/malloclab.pdf) |
+| Proxy Lab | W12、W13 | [proxylab-handout.tar](https://csapp.cs.cmu.edu/3e/proxylab-handout.tar)<br>[proxylab.pdf（writeup）](https://csapp.cs.cmu.edu/3e/proxylab.pdf) |
+| Gossip Glomers | W15、W18、W20、W21、W22 | [Gossip Glomers 挑戰頁](https://fly.io/dist-sys/)<br>[Maelstrom releases（GitHub）](https://github.com/jepsen-io/maelstrom/releases) |
+| 6.5840 Lab 1 MapReduce | W16、W17 | [6.5840 Lab 1 頁面](https://pdos.csail.mit.edu/6.824/labs/lab-mr.html)<br>`git clone git://g.csail.mit.edu/6.5840-golabs-2026 6.5840` |
+| 6.5840 Lab 2 KV server | W19 | [6.5840 Lab 2 頁面](https://pdos.csail.mit.edu/6.824/labs/lab-kvsrv1.html) |
+| 6.5840 Lab 3 Raft | W23、W24、W25、W26、W27 | [6.5840 Lab 3 頁面](https://pdos.csail.mit.edu/6.824/labs/lab-raft1.html) |
+| 6.5840 Lab 4 KV Raft | W28、W29 | [6.5840 Lab 4 頁面](https://pdos.csail.mit.edu/6.824/labs/lab-kvraft1.html) |
+| 6.5840 Lab 5 Sharded KV | W30 | [6.5840 Lab 5 頁面](https://pdos.csail.mit.edu/6.824/labs/lab-shard1.html) |
+
 ## 資料夾結構
 
 ```

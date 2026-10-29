@@ -150,6 +150,14 @@ pre{margin:0;font:.82rem/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospa
   .spec>dd{margin-bottom:8px}
 }
 
+.dl{margin-top:10px;padding:8px 12px;border:1px dashed color-mix(in srgb,var(--c) 50%,var(--line));border-radius:8px;font-size:.88rem;background:var(--card)}
+.dl-h{font-weight:700;font-size:.84rem;color:var(--c);margin-bottom:2px}
+.dl-l{margin:0;padding-left:1.2em}
+.dl-same{color:var(--fg2)}
+.dlt{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.dlt th,.dlt td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.dlt th{color:var(--muted);font-weight:500}
+.dlt td:first-child{white-space:nowrap;font-weight:600}
 /* filter view */
 .fitem{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:8px}
 .fitem.current{border-color:var(--hl)}
@@ -244,6 +252,9 @@ details.about[open]>summary::before{content:"▾ "}
   <h2>資源連結</h2>
   <div class="links" id="links"></div>
 
+  <h2 id="dl-overview">Lab 下載總覽 <small>連結 2026/10/30 驗證過</small></h2>
+  <div style="overflow-x:auto"><table class="dlt" id="dlTable"></table></div>
+
   <details class="card about">
     <summary>關於這份計畫</summary>
     <div class="in">
@@ -298,36 +309,36 @@ details.about[open]>summary::before{content:"▾ "}
 // 正式進度：完成一週就把該週的 done 改成 true 再 commit。
 // algo / sysdesign / behavioral 為空字串時，該週不顯示那個區塊。
 const WEEKS = [
-  {"n": 1, "date": "11/02", "title": "位元與整數", "read": "CSAPP Ch1 系統漫遊；Ch2.1–2.3 資訊表示、整數", "lab": "Data Lab：整數題（bitXor、isTmax、conditional 等）", "build": "寫一個 `popcount` / `bitcount` 小工具，配單元測試涵蓋邊界值", "note": "用自己的話解釋：為什麼補數讓加減法共用同一套電路？哪些情況會溢位？", "algo": "NeetCode 150 Arrays & Hashing 前 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [{"src": "CMU 15-213 F15", "title": "Lecture 01: Course Overview", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d8c83d3a-8074-4afe-ae3b-693e2250999a", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=ScMxnXq6fbI", "min": 75}, {"src": "CMU 15-213 F15", "title": "Lecture 02: Bits, Bytes, and Integers", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6ca8cdb4-6961-42d9-8fac-299e53759a17", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=Z4SMP451N-g", "min": 71}, {"src": "CMU 15-213 F15", "title": "Lecture 03: Bits, Bytes, and Integers (cont.)", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=526e6341-aa53-4107-8fa1-d13c0e92342e", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=rFkQyULQQOg", "min": 76}, {"src": "CMU 15-213 F15", "title": "Recitation 3: Datalab and Data Representations", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=392a2070-4d49-443c-90b8-4fbbc9f666c6", "opt": false, "note": "Data Lab 開工前看", "min": 50}], "novideo": "", "goal": "看懂位元、位元組與整數在機器裡怎麼表示；能用位元運算解 Data Lab 的整數題。\n建立每週節奏：影片 → 讀書做練習題 → Lab → 小專案 → 筆記。", "readx": ["Ch1 A Tour of Computer Systems（全章速讀）", "§2.1 Information Storage：十六進位、位元組順序、位元運算、shift", "§2.2 Integer Representations：unsigned、two's complement、轉型與 sign extension", "§2.3 Integer Arithmetic：加法溢位、乘以常數、除以 2 的冪", "練習：§2.1–2.3 內所有 Practice Problems（解答在章末），每題先自己算再對答案"], "labx": ["下載 datalab-handout.tar，`make`，讀 `bits.c` 開頭的 coding rules", "整數題：bitXor、tmin、isTmax、allOddBits、negate、isAsciiDigit、conditional、isLessOrEqual、logicalNeg、howManyBits（題名依 handout 為準）", "每題做完跑 `./btest -f <題名>`；隨時用 `./dlc bits.c` 檢查是否違規、`./dlc -e bits.c` 看運算子數"], "spec": {"goal": "用 C 寫一個 popcount 工具，比較三種演算法並用測試鎖住邊界值。", "req": ["實作 `popcount_naive`（逐位元）、`popcount_kernighan`（`x &= x-1`）、`popcount_swar`（分組相加，不用迴圈）", "CLI 讀十進位或 0x 十六進位的 32-bit unsigned，印出三種結果", "`make test` 跑單元測試；`make bench` 對 10^7 個隨機數計時"], "iface": "$ ./popcount 0xF0F0\n8 8 8\n$ ./popcount 4294967295\n32 32 32\n\nunsigned popcount_naive(uint32_t x);\nunsigned popcount_kernighan(uint32_t x);\nunsigned popcount_swar(uint32_t x);", "accept": ["測試涵蓋 0、1、0x80000000、0xFFFFFFFF、0x55555555（=16）、0xAAAAAAAA（=16）", "對 10^6 個隨機數，三種實作結果與 `__builtin_popcount` 完全一致", "`gcc -Wall -Wextra -O2` 零警告", "bench 輸出三種實作的 ns/op"], "bonus": ["加 64-bit 版", "用 `objdump -d` 看 `__builtin_popcount` 在 `-mpopcnt` 下是否變成單一指令"], "time": "2 小時", "dir": "csapp-labs/datalab/popcount/"}, "recs": [{"kind": "論文", "title": "The UNIX Time-Sharing System", "by": "Dennis M. Ritchie, Ken Thompson（CACM）", "year": 1974, "url": "https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf", "why": "Unix 的原始論文：檔案、行程、shell、pipe 的設計一次說清楚，CSAPP 後半講的東西幾乎都從這裡長出來。", "time": "約 60 分鐘"}, {"kind": "部落格", "title": "The LMAX Architecture", "by": "Martin Fowler（martinfowler.com）", "year": 2011, "url": "https://martinfowler.com/articles/lmax.html", "why": "單執行緒每秒處理數百萬筆交易的經典案例，「mechanical sympathy」一詞因此流行：懂硬體才寫得出快的系統。", "time": "約 40 分鐘"}], "budget": ["影片約 4.5 小時", "閱讀約 3 小時", "Lab 3–4 小時", "小專案 2 小時", "筆記約 1 小時", "面試準備 3–4 小時"]},
-  {"n": 2, "date": "11/09", "title": "浮點數", "read": "Ch2.4 浮點數", "lab": "Data Lab：浮點題（floatScale2、floatFloat2Int 等），完成整個 Lab", "build": "CLI：輸入一個 float，印出 sign / exponent / fraction 與實際值", "note": "為什麼 0.1 + 0.2 ≠ 0.3？denormalized 數存在的意義是什麼？", "algo": "NeetCode 150 Bit Manipulation 全部 7 題（提前做，配 Data Lab）", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 3, "date": "11/16", "title": "機器碼：控制流程", "read": "Ch3.1–3.6 組合語言基礎、算術、條件與迴圈", "lab": "Bomb Lab：phase 1–3（學會 `gdb` 和 `objdump -d`）", "build": "同一段 C 用 `-O0` 和 `-O2` 編譯，對照組合語言差異", "note": "畫出 if / switch / loop 對應的組語樣板，`switch` 什麼時候會變成跳轉表？", "algo": "Arrays & Hashing 後 4 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 4, "date": "11/23", "title": "機器碼：程序與資料", "read": "Ch3.7–3.9 程序呼叫、陣列、結構", "lab": "Bomb Lab：phase 4–6（含 secret phase 可選）", "build": "手畫一次遞迴函式的 stack frame，再用 `gdb` 單步驗證", "note": "callee-saved 與 caller-saved 暫存器的分工，以及為什麼要這樣分", "algo": "Two Pointers 全部 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 5, "date": "11/30", "title": "緩衝區溢位", "read": "Ch3.10 指標、緩衝區溢位與防護", "lab": "Attack Lab：code injection 3 題 + ROP 2 題", "build": "寫一個有漏洞的小程式，開關 `-fstack-protector`、ASLR 觀察差異", "note": "canary、ASLR、NX 各擋住哪種攻擊？ROP 為什麼能繞過 NX？", "algo": "Sliding Window 全部 6 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 6, "date": "12/07", "title": "記憶體階層", "read": "Ch6 記憶體階層（Ch4 處理器架構可略過或之後補）", "lab": "Cache Lab Part A：寫一個 cache 模擬器", "build": "benchmark：二維陣列按列走 vs 按行走，量出時間差", "note": "解釋 locality，並用你的 benchmark 數字當證據", "algo": "Stack 全部 6 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 7, "date": "12/14", "title": "效能最佳化", "read": "Ch5 速讀（5.1–5.9），重點放在 loop unrolling 與 memory aliasing", "lab": "Cache Lab Part B：最佳化矩陣轉置的 miss 數", "build": "用 `perf stat` 量自己的轉置版本 cache miss", "note": "blocking 為什麼能降低 miss？跟資料庫的 page 有什麼共通點？", "algo": "Binary Search 全部 7 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 8, "date": "12/21", "title": "連結與行程", "read": "Ch7 連結（速讀）；Ch8.1–8.4 例外控制流、行程", "lab": "Shell Lab：先完成 `eval`、內建指令、fork/exec", "build": "小程式：fork 出 N 個子行程，父行程用 `waitpid` 回收並印 exit status", "note": "static vs dynamic linking 的取捨；zombie 和 orphan 行程是怎麼產生的", "algo": "Linked List 前 6 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 9, "date": "12/28", "title": "訊號", "read": "Ch8.5–8.8 訊號、非區域跳轉", "lab": "Shell Lab：完成 job control（ctrl-c、ctrl-z、fg、bg、jobs）", "build": "故意寫出 signal handler 的 race，再用 `sigprocmask` 修好", "note": "為什麼 handler 裡只能呼叫 async-signal-safe 函式？", "algo": "Linked List 後 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 10, "date": "01/04", "title": "虛擬記憶體", "read": "Ch9.1–9.8 位址翻譯、TLB、`mmap`", "lab": "Malloc Lab：先做 implicit free list 版本，能過正確性測試", "build": "用 `mmap` 讀大檔 vs `read()`，比較速度與 page fault 次數", "note": "一次 load 指令從虛擬位址到拿到資料，經過了哪些步驟？", "algo": "Trees 第 1–5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 11, "date": "01/11", "title": "動態記憶體配置", "read": "Ch9.9–9.11 動態配置、GC 概念、常見記憶體 bug", "lab": "Malloc Lab：改成 explicit 或 segregated free list，拉高 util 與 throughput", "build": "把 allocator 的 util / throughput 做成表格，記錄每次改動的效果", "note": "first-fit、best-fit、segregated fit 的取捨，跟 jemalloc / tcmalloc 的設計對照", "algo": "Trees 第 6–10 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 12, "date": "01/18", "title": "I/O 與網路", "read": "Ch10 系統層級 I/O；Ch11 網路程式設計", "lab": "Proxy Lab Part I：循序版 HTTP proxy", "build": "照書做 Tiny Web Server，用 `curl` 和瀏覽器測", "note": "socket → bind → listen → accept 的流程；RIO 套件解決了什麼問題？", "algo": "Trees 第 11–15 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 13, "date": "01/25", "title": "並行程式設計", "read": "Ch12 並行：行程、I/O 多工、執行緒、同步", "lab": "Proxy Lab Part II + III：多執行緒 + LRU 快取", "build": "把 proxy 改成 thread pool，壓測比較 thread-per-request", "note": "thread-per-request、thread pool、event loop（epoll）各適合什麼場景？", "algo": "Tries 全部 3 題 + Heap / Priority Queue 前 2 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 14, "date": "02/01", "title": "緩衝週 + Go 暖身", "read": "回顧 CSAPP 筆記，寫一篇總結；開始 A Tour of Go", "lab": "補完前面沒做完的 Lab", "build": "用 Go 重寫 Tiny Web Server 的核心，為 6.5840 熱身", "note": "CSAPP 總結：哪三個觀念最改變你寫程式的方式？（春節前後，進度可放慢）", "algo": "Heap / Priority Queue 後 5 題；回頭重寫前面卡住的題目", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 15, "date": "02/08", "title": "架構取捨與非功能需求", "read": "DDIA 2e Ch1 Trade-Offs in Data Systems Architecture；Ch2 Defining Nonfunctional Requirements", "lab": "Gossip Glomers #1 Echo、#2 Unique ID Generation（熟悉 Maelstrom）", "build": "替自己公司的一個服務寫出 p50 / p99 延遲與負載描述", "note": "為什麼看 p99 而不是平均？用 Ch2 的社群時間軸案例練一次 fan-out 取捨", "algo": "Backtracking 前 5 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 16, "date": "02/15", "title": "資料模型", "read": "Ch3 Data Models and Query Languages", "lab": "6.5840 Lab 1 MapReduce：先讀 MapReduce 論文，寫 worker", "build": "同一份資料分別用關聯式、文件式、圖模型建模，比較查詢寫法", "note": "什麼情況選 document model？event sourcing / CQRS 解決了什麼？", "algo": "Backtracking 後 5 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 17, "date": "02/22", "title": "儲存引擎（上）", "read": "Ch4 Storage and Retrieval：Log-Structured Storage、B-Trees、兩者比較", "lab": "6.5840 Lab 1：完成 coordinator、容錯（worker 掛掉重派）", "build": "迷你 LSM-tree KV：WAL + memtable + SSTable 落盤", "note": "LSM-tree vs B-tree 的寫放大、讀放大、空間放大", "algo": "Graphs 第 1–5 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 18, "date": "03/01", "title": "儲存引擎（下）", "read": "Ch4 後半：分析型儲存、列式儲存、全文與向量索引", "lab": "Gossip Glomers #3 Broadcast（3a–3c）", "build": "幫 LSM-tree 加 compaction 和 Bloom filter，量讀取效能變化", "note": "OLTP 與 OLAP 的儲存為什麼長得不一樣？", "algo": "Graphs 第 6–9 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 19, "date": "03/08", "title": "編碼與演進", "read": "Ch5 Encoding and Evolution", "lab": "6.5840 Lab 2 Key/Value server（線性一致的單機 KV、處理掉包）", "build": "同一份資料用 JSON 與 Protobuf 編碼，比大小與速度；試一次 schema 演進", "note": "向前相容 vs 向後相容；durable execution 是什麼？", "algo": "Graphs 第 10–13 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 20, "date": "03/15", "title": "複製", "read": "Ch6 Replication", "lab": "Gossip Glomers #3 Broadcast（3d–3e，效率與網路分割）", "build": "幫迷你 KV 加上 leader-follower 非同步複製", "note": "replication lag 會造成哪些異常？read-your-writes 怎麼做？", "algo": "Advanced Graphs 全部 6 題", "sysdesign": "分散式 Key-Value Store（複製、quorum 讀寫），45 分鐘出聲練", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 21, "date": "03/22", "title": "分片", "read": "Ch7 Sharding", "lab": "Gossip Glomers #4 Grow-Only Counter、#5 Kafka-Style Log", "build": "實作 consistent hashing ring，模擬加減節點時的資料搬移量", "note": "key range vs hash 分片；hot spot 怎麼緩解？", "algo": "1-D DP 前 6 題", "sysdesign": "短網址服務（ID 生成、依 key 分片、熱點）", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 22, "date": "03/29", "title": "交易（上）", "read": "Ch8 Transactions：ACID、弱隔離等級、snapshot isolation", "lab": "Gossip Glomers #6 Totally-Available Transactions", "build": "在迷你 KV 上實作 MVCC 版 snapshot isolation", "note": "write skew 的例子，以及哪種隔離等級能防住它", "algo": "1-D DP 後 6 題", "sysdesign": "秒殺 / 訂票下單（防超賣、隔離等級）", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 23, "date": "04/05", "title": "交易（下）", "read": "Ch8 後半：serializability（serial execution、2PL、SSI）、分散式交易", "lab": "讀 Raft 論文（extended version）前半，準備 Lab 3", "build": "寫一個 2PC 模擬器，故意讓 coordinator 在不同時間點掛掉", "note": "2PC 為什麼會卡住？跟 consensus 差在哪？", "algo": "2-D DP 前 6 題", "sysdesign": "支付系統（冪等、2PC vs saga）", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 24, "date": "04/12", "title": "分散式系統的麻煩", "read": "Ch9 The Trouble with Distributed Systems", "lab": "6.5840 Lab 3A Raft leader election", "build": "（本週以 Lab 為主）", "note": "unreliable network、unreliable clock、process pause 各舉一個真實事故", "algo": "2-D DP 後 5 題", "sysdesign": "分散式限流器 Rate Limiter（計數同步、時鐘誤差）", "behavioral": "學 STAR 架構，寫故事 1「衝突」（Have Backbone; Disagree and Commit / Earn Trust）", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 25, "date": "04/19", "title": "一致性與共識（上）", "read": "Ch10 Consistency and Consensus：線性一致性、ID 生成與邏輯時鐘", "lab": "6.5840 Lab 3B Raft log replication", "build": "（本週以 Lab 為主）", "note": "linearizability vs serializability；Lamport clock 能保證什麼、不能保證什麼", "algo": "Greedy 前 4 題", "sysdesign": "分散式 ID 生成器 + 分散式鎖（fencing token）", "behavioral": "故事 2「主導負責」（Ownership）", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 26, "date": "04/26", "title": "一致性與共識（下）", "read": "Ch10 共識一節", "lab": "6.5840 Lab 3C persistence", "build": "（本週以 Lab 為主）", "note": "用 Raft 的角度解釋 FLP、quorum 和 fencing token", "algo": "Greedy 後 4 題", "sysdesign": "設定中心 / 服務發現（etcd、ZooKeeper 類）", "behavioral": "故事 3「失敗與學到什麼」（Learn and Be Curious / Earn Trust）", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 27, "date": "05/03", "title": "Raft 收尾", "read": "回顧 Ch9–10 筆記（本週不讀新章）", "lab": "6.5840 Lab 3D log compaction / snapshot", "build": "把 Raft 的 debug log 做成可視化（依 term、server 上色）", "note": "Raft 實作踩過的三個坑，以及怎麼抓到的", "algo": "Intervals 全部 6 題", "sysdesign": "聊天系統（訊息順序、離線送達、在線狀態）", "behavioral": "故事 4「模糊情境下做決定」（Bias for Action / Are Right, A Lot）", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 28, "date": "05/10", "title": "批次處理", "read": "Ch11 Batch Processing", "lab": "6.5840 Lab 4A KV Raft：在 Raft 上做 KV 服務", "build": "對照自己 Lab 1 的 MapReduce，列出跟 Spark 的差異", "note": "為什麼 MapReduce 讓位給 dataflow 引擎？", "algo": "Math & Geometry 前 4 題 + 1 場 45 分鐘計時 mock（演算法）", "sysdesign": "網頁爬蟲 + 批次建索引", "behavioral": "故事 5「做出影響」（Deliver Results）、故事 6「為使用者著想」（Customer Obsession）", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 29, "date": "05/17", "title": "串流處理", "read": "Ch12 Stream Processing", "lab": "6.5840 Lab 4B+C：snapshot 與重複請求處理", "build": "用 Go 寫一個小型 stream processor：讀 log、做 tumbling window 計數", "note": "exactly-once 實際上是怎麼做到的？", "algo": "Math & Geometry 後 4 題 + 1 場 45 分鐘計時 mock", "sysdesign": "分散式訊息佇列（Kafka 類），45 分鐘計時 mock", "behavioral": "故事 7「深挖技術問題」（Dive Deep），整理故事 × Leadership Principles 對照表", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []},
-  {"n": 30, "date": "05/24", "title": "收尾與總結", "read": "Ch13 A Philosophy of Streaming Systems；Ch14 Doing the Right Thing", "lab": "可選：6.5840 Lab 5 Sharded KV", "build": "把 LSM KV、Raft、proxy 整理成 GitHub 作品集，各寫 README", "note": "全書總結 + 拿一題系統設計題（例如設計 Twitter timeline）用學到的東西完整回答一次", "algo": "總複習：2 場 45 分鐘計時 mock（演算法 + 系統設計「News Feed / Twitter timeline」），重寫錯題清單", "sysdesign": "", "behavioral": "每個故事練到 2 分鐘內講完，做一次完整 behavioral mock", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": []}
+  {"n": 1, "date": "11/02", "title": "位元與整數", "read": "CSAPP Ch1 系統漫遊；Ch2.1–2.3 資訊表示、整數", "lab": "Data Lab：整數題（bitXor、isTmax、conditional 等）", "build": "寫一個 `popcount` / `bitcount` 小工具，配單元測試涵蓋邊界值", "note": "用自己的話解釋：為什麼補數讓加減法共用同一套電路？哪些情況會溢位？", "algo": "NeetCode 150 Arrays & Hashing 前 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [{"src": "CMU 15-213 F15", "title": "Lecture 01: Course Overview", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d8c83d3a-8074-4afe-ae3b-693e2250999a", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=ScMxnXq6fbI", "min": 75}, {"src": "CMU 15-213 F15", "title": "Lecture 02: Bits, Bytes, and Integers", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6ca8cdb4-6961-42d9-8fac-299e53759a17", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=Z4SMP451N-g", "min": 71}, {"src": "CMU 15-213 F15", "title": "Lecture 03: Bits, Bytes, and Integers (cont.)", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=526e6341-aa53-4107-8fa1-d13c0e92342e", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=rFkQyULQQOg", "min": 76}, {"src": "CMU 15-213 F15", "title": "Recitation 3: Datalab and Data Representations", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=392a2070-4d49-443c-90b8-4fbbc9f666c6", "opt": false, "note": "Data Lab 開工前看", "min": 50}], "novideo": "", "goal": "看懂位元、位元組與整數在機器裡怎麼表示；能用位元運算解 Data Lab 的整數題。\n建立每週節奏：影片 → 讀書做練習題 → Lab → 小專案 → 筆記。", "readx": ["Ch1 A Tour of Computer Systems（全章速讀）", "§2.1 Information Storage：十六進位、位元組順序、位元運算、shift", "§2.2 Integer Representations：unsigned、two's complement、轉型與 sign extension", "§2.3 Integer Arithmetic：加法溢位、乘以常數、除以 2 的冪", "練習：§2.1–2.3 內所有 Practice Problems（解答在章末），每題先自己算再對答案"], "labx": ["下載 datalab-handout.tar，`make`，讀 `bits.c` 開頭的 coding rules", "整數題：bitXor、tmin、isTmax、allOddBits、negate、isAsciiDigit、conditional、isLessOrEqual、logicalNeg、howManyBits（題名依 handout 為準）", "每題做完跑 `./btest -f <題名>`；隨時用 `./dlc bits.c` 檢查是否違規、`./dlc -e bits.c` 看運算子數"], "spec": {"goal": "用 C 寫一個 popcount 工具，比較三種演算法並用測試鎖住邊界值。", "req": ["實作 `popcount_naive`（逐位元）、`popcount_kernighan`（`x &= x-1`）、`popcount_swar`（分組相加，不用迴圈）", "CLI 讀十進位或 0x 十六進位的 32-bit unsigned，印出三種結果", "`make test` 跑單元測試；`make bench` 對 10^7 個隨機數計時"], "iface": "$ ./popcount 0xF0F0\n8 8 8\n$ ./popcount 4294967295\n32 32 32\n\nunsigned popcount_naive(uint32_t x);\nunsigned popcount_kernighan(uint32_t x);\nunsigned popcount_swar(uint32_t x);", "accept": ["測試涵蓋 0、1、0x80000000、0xFFFFFFFF、0x55555555（=16）、0xAAAAAAAA（=16）", "對 10^6 個隨機數，三種實作結果與 `__builtin_popcount` 完全一致", "`gcc -Wall -Wextra -O2` 零警告", "bench 輸出三種實作的 ns/op"], "bonus": ["加 64-bit 版", "用 `objdump -d` 看 `__builtin_popcount` 在 `-mpopcnt` 下是否變成單一指令"], "time": "2 小時", "dir": "csapp-labs/datalab/popcount/"}, "recs": [{"kind": "論文", "title": "The UNIX Time-Sharing System", "by": "Dennis M. Ritchie, Ken Thompson（CACM）", "year": 1974, "url": "https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf", "why": "Unix 的原始論文：檔案、行程、shell、pipe 的設計一次說清楚，CSAPP 後半講的東西幾乎都從這裡長出來。", "time": "約 60 分鐘"}, {"kind": "部落格", "title": "The LMAX Architecture", "by": "Martin Fowler（martinfowler.com）", "year": 2011, "url": "https://martinfowler.com/articles/lmax.html", "why": "單執行緒每秒處理數百萬筆交易的經典案例，「mechanical sympathy」一詞因此流行：懂硬體才寫得出快的系統。", "time": "約 40 分鐘"}], "budget": ["影片約 4.5 小時", "閱讀約 3 小時", "Lab 3–4 小時", "小專案 2 小時", "筆記約 1 小時", "面試準備 3–4 小時"], "dl": {"lab": "Data Lab", "links": [{"t": "datalab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/datalab-handout.tar"}, {"t": "datalab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/datalab.pdf"}], "same": 0}},
+  {"n": 2, "date": "11/09", "title": "浮點數", "read": "Ch2.4 浮點數", "lab": "Data Lab：浮點題（floatScale2、floatFloat2Int 等），完成整個 Lab", "build": "CLI：輸入一個 float，印出 sign / exponent / fraction 與實際值", "note": "為什麼 0.1 + 0.2 ≠ 0.3？denormalized 數存在的意義是什麼？", "algo": "NeetCode 150 Bit Manipulation 全部 7 題（提前做，配 Data Lab）", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Data Lab", "links": [{"t": "datalab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/datalab-handout.tar"}, {"t": "datalab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/datalab.pdf"}], "same": 1}},
+  {"n": 3, "date": "11/16", "title": "機器碼：控制流程", "read": "Ch3.1–3.6 組合語言基礎、算術、條件與迴圈", "lab": "Bomb Lab：phase 1–3（學會 `gdb` 和 `objdump -d`）", "build": "同一段 C 用 `-O0` 和 `-O2` 編譯，對照組合語言差異", "note": "畫出 if / switch / loop 對應的組語樣板，`switch` 什麼時候會變成跳轉表？", "algo": "Arrays & Hashing 後 4 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Bomb Lab", "links": [{"t": "bomb.tar", "u": "https://csapp.cs.cmu.edu/3e/bomb.tar"}, {"t": "bomblab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/bomblab.pdf"}], "same": 0}},
+  {"n": 4, "date": "11/23", "title": "機器碼：程序與資料", "read": "Ch3.7–3.9 程序呼叫、陣列、結構", "lab": "Bomb Lab：phase 4–6（含 secret phase 可選）", "build": "手畫一次遞迴函式的 stack frame，再用 `gdb` 單步驗證", "note": "callee-saved 與 caller-saved 暫存器的分工，以及為什麼要這樣分", "algo": "Two Pointers 全部 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Bomb Lab", "links": [{"t": "bomb.tar", "u": "https://csapp.cs.cmu.edu/3e/bomb.tar"}, {"t": "bomblab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/bomblab.pdf"}], "same": 3}},
+  {"n": 5, "date": "11/30", "title": "緩衝區溢位", "read": "Ch3.10 指標、緩衝區溢位與防護", "lab": "Attack Lab：code injection 3 題 + ROP 2 題", "build": "寫一個有漏洞的小程式，開關 `-fstack-protector`、ASLR 觀察差異", "note": "canary、ASLR、NX 各擋住哪種攻擊？ROP 為什麼能繞過 NX？", "algo": "Sliding Window 全部 6 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Attack Lab", "links": [{"t": "target1.tar", "u": "https://csapp.cs.cmu.edu/3e/target1.tar"}, {"t": "attacklab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/attacklab.pdf"}], "same": 0}},
+  {"n": 6, "date": "12/07", "title": "記憶體階層", "read": "Ch6 記憶體階層（Ch4 處理器架構可略過或之後補）", "lab": "Cache Lab Part A：寫一個 cache 模擬器", "build": "benchmark：二維陣列按列走 vs 按行走，量出時間差", "note": "解釋 locality，並用你的 benchmark 數字當證據", "algo": "Stack 全部 6 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Cache Lab", "links": [{"t": "cachelab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/cachelab-handout.tar"}, {"t": "cachelab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/cachelab.pdf"}], "same": 0}},
+  {"n": 7, "date": "12/14", "title": "效能最佳化", "read": "Ch5 速讀（5.1–5.9），重點放在 loop unrolling 與 memory aliasing", "lab": "Cache Lab Part B：最佳化矩陣轉置的 miss 數", "build": "用 `perf stat` 量自己的轉置版本 cache miss", "note": "blocking 為什麼能降低 miss？跟資料庫的 page 有什麼共通點？", "algo": "Binary Search 全部 7 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Cache Lab", "links": [{"t": "cachelab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/cachelab-handout.tar"}, {"t": "cachelab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/cachelab.pdf"}], "same": 6}},
+  {"n": 8, "date": "12/21", "title": "連結與行程", "read": "Ch7 連結（速讀）；Ch8.1–8.4 例外控制流、行程", "lab": "Shell Lab：先完成 `eval`、內建指令、fork/exec", "build": "小程式：fork 出 N 個子行程，父行程用 `waitpid` 回收並印 exit status", "note": "static vs dynamic linking 的取捨；zombie 和 orphan 行程是怎麼產生的", "algo": "Linked List 前 6 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Shell Lab", "links": [{"t": "shlab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/shlab-handout.tar"}, {"t": "shlab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/shlab.pdf"}], "same": 0}},
+  {"n": 9, "date": "12/28", "title": "訊號", "read": "Ch8.5–8.8 訊號、非區域跳轉", "lab": "Shell Lab：完成 job control（ctrl-c、ctrl-z、fg、bg、jobs）", "build": "故意寫出 signal handler 的 race，再用 `sigprocmask` 修好", "note": "為什麼 handler 裡只能呼叫 async-signal-safe 函式？", "algo": "Linked List 後 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Shell Lab", "links": [{"t": "shlab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/shlab-handout.tar"}, {"t": "shlab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/shlab.pdf"}], "same": 8}},
+  {"n": 10, "date": "01/04", "title": "虛擬記憶體", "read": "Ch9.1–9.8 位址翻譯、TLB、`mmap`", "lab": "Malloc Lab：先做 implicit free list 版本，能過正確性測試", "build": "用 `mmap` 讀大檔 vs `read()`，比較速度與 page fault 次數", "note": "一次 load 指令從虛擬位址到拿到資料，經過了哪些步驟？", "algo": "Trees 第 1–5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Malloc Lab", "links": [{"t": "malloclab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/malloclab-handout.tar"}, {"t": "malloclab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/malloclab.pdf"}], "same": 0}},
+  {"n": 11, "date": "01/11", "title": "動態記憶體配置", "read": "Ch9.9–9.11 動態配置、GC 概念、常見記憶體 bug", "lab": "Malloc Lab：改成 explicit 或 segregated free list，拉高 util 與 throughput", "build": "把 allocator 的 util / throughput 做成表格，記錄每次改動的效果", "note": "first-fit、best-fit、segregated fit 的取捨，跟 jemalloc / tcmalloc 的設計對照", "algo": "Trees 第 6–10 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Malloc Lab", "links": [{"t": "malloclab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/malloclab-handout.tar"}, {"t": "malloclab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/malloclab.pdf"}], "same": 10}},
+  {"n": 12, "date": "01/18", "title": "I/O 與網路", "read": "Ch10 系統層級 I/O；Ch11 網路程式設計", "lab": "Proxy Lab Part I：循序版 HTTP proxy", "build": "照書做 Tiny Web Server，用 `curl` 和瀏覽器測", "note": "socket → bind → listen → accept 的流程；RIO 套件解決了什麼問題？", "algo": "Trees 第 11–15 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Proxy Lab", "links": [{"t": "proxylab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/proxylab-handout.tar"}, {"t": "proxylab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/proxylab.pdf"}], "same": 0}},
+  {"n": 13, "date": "01/25", "title": "並行程式設計", "read": "Ch12 並行：行程、I/O 多工、執行緒、同步", "lab": "Proxy Lab Part II + III：多執行緒 + LRU 快取", "build": "把 proxy 改成 thread pool，壓測比較 thread-per-request", "note": "thread-per-request、thread pool、event loop（epoll）各適合什麼場景？", "algo": "Tries 全部 3 題 + Heap / Priority Queue 前 2 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Proxy Lab", "links": [{"t": "proxylab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/proxylab-handout.tar"}, {"t": "proxylab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/proxylab.pdf"}], "same": 12}},
+  {"n": 14, "date": "02/01", "title": "緩衝週 + Go 暖身", "read": "回顧 CSAPP 筆記，寫一篇總結；開始 A Tour of Go", "lab": "補完前面沒做完的 Lab", "build": "用 Go 重寫 Tiny Web Server 的核心，為 6.5840 熱身", "note": "CSAPP 總結：哪三個觀念最改變你寫程式的方式？（春節前後，進度可放慢）", "algo": "Heap / Priority Queue 後 5 題；回頭重寫前面卡住的題目", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": null},
+  {"n": 15, "date": "02/08", "title": "架構取捨與非功能需求", "read": "DDIA 2e Ch1 Trade-Offs in Data Systems Architecture；Ch2 Defining Nonfunctional Requirements", "lab": "Gossip Glomers #1 Echo、#2 Unique ID Generation（熟悉 Maelstrom）", "build": "替自己公司的一個服務寫出 p50 / p99 延遲與負載描述", "note": "為什麼看 p99 而不是平均？用 Ch2 的社群時間軸案例練一次 fan-out 取捨", "algo": "Backtracking 前 5 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Gossip Glomers", "links": [{"t": "Gossip Glomers 挑戰頁", "u": "https://fly.io/dist-sys/"}, {"t": "Maelstrom releases（GitHub）", "u": "https://github.com/jepsen-io/maelstrom/releases"}], "same": 0}},
+  {"n": 16, "date": "02/15", "title": "資料模型", "read": "Ch3 Data Models and Query Languages", "lab": "6.5840 Lab 1 MapReduce：先讀 MapReduce 論文，寫 worker", "build": "同一份資料分別用關聯式、文件式、圖模型建模，比較查詢寫法", "note": "什麼情況選 document model？event sourcing / CQRS 解決了什麼？", "algo": "Backtracking 後 5 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 1 MapReduce", "links": [{"t": "6.5840 Lab 1 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-mr.html"}], "same": 0, "code": "git clone git://g.csail.mit.edu/6.5840-golabs-2026 6.5840"}},
+  {"n": 17, "date": "02/22", "title": "儲存引擎（上）", "read": "Ch4 Storage and Retrieval：Log-Structured Storage、B-Trees、兩者比較", "lab": "6.5840 Lab 1：完成 coordinator、容錯（worker 掛掉重派）", "build": "迷你 LSM-tree KV：WAL + memtable + SSTable 落盤", "note": "LSM-tree vs B-tree 的寫放大、讀放大、空間放大", "algo": "Graphs 第 1–5 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 1 MapReduce", "links": [{"t": "6.5840 Lab 1 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-mr.html"}], "same": 16, "repo": 16}},
+  {"n": 18, "date": "03/01", "title": "儲存引擎（下）", "read": "Ch4 後半：分析型儲存、列式儲存、全文與向量索引", "lab": "Gossip Glomers #3 Broadcast（3a–3c）", "build": "幫 LSM-tree 加 compaction 和 Bloom filter，量讀取效能變化", "note": "OLTP 與 OLAP 的儲存為什麼長得不一樣？", "algo": "Graphs 第 6–9 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Gossip Glomers", "links": [{"t": "Gossip Glomers 挑戰頁", "u": "https://fly.io/dist-sys/"}, {"t": "Maelstrom releases（GitHub）", "u": "https://github.com/jepsen-io/maelstrom/releases"}], "same": 15}},
+  {"n": 19, "date": "03/08", "title": "編碼與演進", "read": "Ch5 Encoding and Evolution", "lab": "6.5840 Lab 2 Key/Value server（線性一致的單機 KV、處理掉包）", "build": "同一份資料用 JSON 與 Protobuf 編碼，比大小與速度；試一次 schema 演進", "note": "向前相容 vs 向後相容；durable execution 是什麼？", "algo": "Graphs 第 10–13 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 2 KV server", "links": [{"t": "6.5840 Lab 2 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-kvsrv1.html"}], "same": 0, "repo": 16}},
+  {"n": 20, "date": "03/15", "title": "複製", "read": "Ch6 Replication", "lab": "Gossip Glomers #3 Broadcast（3d–3e，效率與網路分割）", "build": "幫迷你 KV 加上 leader-follower 非同步複製", "note": "replication lag 會造成哪些異常？read-your-writes 怎麼做？", "algo": "Advanced Graphs 全部 6 題", "sysdesign": "分散式 Key-Value Store（複製、quorum 讀寫），45 分鐘出聲練", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Gossip Glomers", "links": [{"t": "Gossip Glomers 挑戰頁", "u": "https://fly.io/dist-sys/"}, {"t": "Maelstrom releases（GitHub）", "u": "https://github.com/jepsen-io/maelstrom/releases"}], "same": 15}},
+  {"n": 21, "date": "03/22", "title": "分片", "read": "Ch7 Sharding", "lab": "Gossip Glomers #4 Grow-Only Counter、#5 Kafka-Style Log", "build": "實作 consistent hashing ring，模擬加減節點時的資料搬移量", "note": "key range vs hash 分片；hot spot 怎麼緩解？", "algo": "1-D DP 前 6 題", "sysdesign": "短網址服務（ID 生成、依 key 分片、熱點）", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Gossip Glomers", "links": [{"t": "Gossip Glomers 挑戰頁", "u": "https://fly.io/dist-sys/"}, {"t": "Maelstrom releases（GitHub）", "u": "https://github.com/jepsen-io/maelstrom/releases"}], "same": 15}},
+  {"n": 22, "date": "03/29", "title": "交易（上）", "read": "Ch8 Transactions：ACID、弱隔離等級、snapshot isolation", "lab": "Gossip Glomers #6 Totally-Available Transactions", "build": "在迷你 KV 上實作 MVCC 版 snapshot isolation", "note": "write skew 的例子，以及哪種隔離等級能防住它", "algo": "1-D DP 後 6 題", "sysdesign": "秒殺 / 訂票下單（防超賣、隔離等級）", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Gossip Glomers", "links": [{"t": "Gossip Glomers 挑戰頁", "u": "https://fly.io/dist-sys/"}, {"t": "Maelstrom releases（GitHub）", "u": "https://github.com/jepsen-io/maelstrom/releases"}], "same": 15}},
+  {"n": 23, "date": "04/05", "title": "交易（下）", "read": "Ch8 後半：serializability（serial execution、2PL、SSI）、分散式交易", "lab": "讀 Raft 論文（extended version）前半，準備 Lab 3", "build": "寫一個 2PC 模擬器，故意讓 coordinator 在不同時間點掛掉", "note": "2PC 為什麼會卡住？跟 consensus 差在哪？", "algo": "2-D DP 前 6 題", "sysdesign": "支付系統（冪等、2PC vs saga）", "behavioral": "", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 3 Raft", "links": [{"t": "6.5840 Lab 3 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-raft1.html"}], "same": 0, "repo": 16}},
+  {"n": 24, "date": "04/12", "title": "分散式系統的麻煩", "read": "Ch9 The Trouble with Distributed Systems", "lab": "6.5840 Lab 3A Raft leader election", "build": "（本週以 Lab 為主）", "note": "unreliable network、unreliable clock、process pause 各舉一個真實事故", "algo": "2-D DP 後 5 題", "sysdesign": "分散式限流器 Rate Limiter（計數同步、時鐘誤差）", "behavioral": "學 STAR 架構，寫故事 1「衝突」（Have Backbone; Disagree and Commit / Earn Trust）", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 3 Raft", "links": [{"t": "6.5840 Lab 3 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-raft1.html"}], "same": 23, "repo": 16}},
+  {"n": 25, "date": "04/19", "title": "一致性與共識（上）", "read": "Ch10 Consistency and Consensus：線性一致性、ID 生成與邏輯時鐘", "lab": "6.5840 Lab 3B Raft log replication", "build": "（本週以 Lab 為主）", "note": "linearizability vs serializability；Lamport clock 能保證什麼、不能保證什麼", "algo": "Greedy 前 4 題", "sysdesign": "分散式 ID 生成器 + 分散式鎖（fencing token）", "behavioral": "故事 2「主導負責」（Ownership）", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 3 Raft", "links": [{"t": "6.5840 Lab 3 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-raft1.html"}], "same": 23, "repo": 16}},
+  {"n": 26, "date": "04/26", "title": "一致性與共識（下）", "read": "Ch10 共識一節", "lab": "6.5840 Lab 3C persistence", "build": "（本週以 Lab 為主）", "note": "用 Raft 的角度解釋 FLP、quorum 和 fencing token", "algo": "Greedy 後 4 題", "sysdesign": "設定中心 / 服務發現（etcd、ZooKeeper 類）", "behavioral": "故事 3「失敗與學到什麼」（Learn and Be Curious / Earn Trust）", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 3 Raft", "links": [{"t": "6.5840 Lab 3 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-raft1.html"}], "same": 23, "repo": 16}},
+  {"n": 27, "date": "05/03", "title": "Raft 收尾", "read": "回顧 Ch9–10 筆記（本週不讀新章）", "lab": "6.5840 Lab 3D log compaction / snapshot", "build": "把 Raft 的 debug log 做成可視化（依 term、server 上色）", "note": "Raft 實作踩過的三個坑，以及怎麼抓到的", "algo": "Intervals 全部 6 題", "sysdesign": "聊天系統（訊息順序、離線送達、在線狀態）", "behavioral": "故事 4「模糊情境下做決定」（Bias for Action / Are Right, A Lot）", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 3 Raft", "links": [{"t": "6.5840 Lab 3 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-raft1.html"}], "same": 23, "repo": 16}},
+  {"n": 28, "date": "05/10", "title": "批次處理", "read": "Ch11 Batch Processing", "lab": "6.5840 Lab 4A KV Raft：在 Raft 上做 KV 服務", "build": "對照自己 Lab 1 的 MapReduce，列出跟 Spark 的差異", "note": "為什麼 MapReduce 讓位給 dataflow 引擎？", "algo": "Math & Geometry 前 4 題 + 1 場 45 分鐘計時 mock（演算法）", "sysdesign": "網頁爬蟲 + 批次建索引", "behavioral": "故事 5「做出影響」（Deliver Results）、故事 6「為使用者著想」（Customer Obsession）", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 4 KV Raft", "links": [{"t": "6.5840 Lab 4 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-kvraft1.html"}], "same": 0, "repo": 16}},
+  {"n": 29, "date": "05/17", "title": "串流處理", "read": "Ch12 Stream Processing", "lab": "6.5840 Lab 4B+C：snapshot 與重複請求處理", "build": "用 Go 寫一個小型 stream processor：讀 log、做 tumbling window 計數", "note": "exactly-once 實際上是怎麼做到的？", "algo": "Math & Geometry 後 4 題 + 1 場 45 分鐘計時 mock", "sysdesign": "分散式訊息佇列（Kafka 類），45 分鐘計時 mock", "behavioral": "故事 7「深挖技術問題」（Dive Deep），整理故事 × Leadership Principles 對照表", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 4 KV Raft", "links": [{"t": "6.5840 Lab 4 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-kvraft1.html"}], "same": 28, "repo": 16}},
+  {"n": 30, "date": "05/24", "title": "收尾與總結", "read": "Ch13 A Philosophy of Streaming Systems；Ch14 Doing the Right Thing", "lab": "可選：6.5840 Lab 5 Sharded KV", "build": "把 LSM KV、Raft、proxy 整理成 GitHub 作品集，各寫 README", "note": "全書總結 + 拿一題系統設計題（例如設計 Twitter timeline）用學到的東西完整回答一次", "algo": "總複習：2 場 45 分鐘計時 mock（演算法 + 系統設計「News Feed / Twitter timeline」），重寫錯題清單", "sysdesign": "", "behavioral": "每個故事練到 2 分鐘內講完，做一次完整 behavioral mock", "phase": 2, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "6.5840 Lab 5 Sharded KV", "links": [{"t": "6.5840 Lab 5 頁面", "u": "https://pdos.csail.mit.edu/6.824/labs/lab-shard1.html"}], "same": 0, "repo": 16}}
 ];
 
 // 每週技術精讀：新增一筆就 push 一個物件進來，用 week 掛到對應的週卡片（順序不拘，頁面依 date 由新到舊排）。
@@ -436,6 +447,173 @@ const LINKS = [
   }
 ];
 
+// Lab 下載總覽（每週卡片的 ⬇️ 區塊在 WEEKS 的 dl 欄位）
+const LAB_DL = [
+  {
+    "lab": "Data Lab",
+    "weeks": "W1、W2",
+    "links": [
+      {
+        "t": "datalab-handout.tar",
+        "u": "https://csapp.cs.cmu.edu/3e/datalab-handout.tar"
+      },
+      {
+        "t": "datalab.pdf（writeup）",
+        "u": "https://csapp.cs.cmu.edu/3e/datalab.pdf"
+      }
+    ]
+  },
+  {
+    "lab": "Bomb Lab",
+    "weeks": "W3、W4",
+    "links": [
+      {
+        "t": "bomb.tar",
+        "u": "https://csapp.cs.cmu.edu/3e/bomb.tar"
+      },
+      {
+        "t": "bomblab.pdf（writeup）",
+        "u": "https://csapp.cs.cmu.edu/3e/bomblab.pdf"
+      }
+    ]
+  },
+  {
+    "lab": "Attack Lab",
+    "weeks": "W5",
+    "links": [
+      {
+        "t": "target1.tar",
+        "u": "https://csapp.cs.cmu.edu/3e/target1.tar"
+      },
+      {
+        "t": "attacklab.pdf（writeup）",
+        "u": "https://csapp.cs.cmu.edu/3e/attacklab.pdf"
+      }
+    ]
+  },
+  {
+    "lab": "Cache Lab",
+    "weeks": "W6、W7",
+    "links": [
+      {
+        "t": "cachelab-handout.tar",
+        "u": "https://csapp.cs.cmu.edu/3e/cachelab-handout.tar"
+      },
+      {
+        "t": "cachelab.pdf（writeup）",
+        "u": "https://csapp.cs.cmu.edu/3e/cachelab.pdf"
+      }
+    ]
+  },
+  {
+    "lab": "Shell Lab",
+    "weeks": "W8、W9",
+    "links": [
+      {
+        "t": "shlab-handout.tar",
+        "u": "https://csapp.cs.cmu.edu/3e/shlab-handout.tar"
+      },
+      {
+        "t": "shlab.pdf（writeup）",
+        "u": "https://csapp.cs.cmu.edu/3e/shlab.pdf"
+      }
+    ]
+  },
+  {
+    "lab": "Malloc Lab",
+    "weeks": "W10、W11",
+    "links": [
+      {
+        "t": "malloclab-handout.tar",
+        "u": "https://csapp.cs.cmu.edu/3e/malloclab-handout.tar"
+      },
+      {
+        "t": "malloclab.pdf（writeup）",
+        "u": "https://csapp.cs.cmu.edu/3e/malloclab.pdf"
+      }
+    ]
+  },
+  {
+    "lab": "Proxy Lab",
+    "weeks": "W12、W13",
+    "links": [
+      {
+        "t": "proxylab-handout.tar",
+        "u": "https://csapp.cs.cmu.edu/3e/proxylab-handout.tar"
+      },
+      {
+        "t": "proxylab.pdf（writeup）",
+        "u": "https://csapp.cs.cmu.edu/3e/proxylab.pdf"
+      }
+    ]
+  },
+  {
+    "lab": "Gossip Glomers",
+    "weeks": "W15、W18、W20、W21、W22",
+    "links": [
+      {
+        "t": "Gossip Glomers 挑戰頁",
+        "u": "https://fly.io/dist-sys/"
+      },
+      {
+        "t": "Maelstrom releases（GitHub）",
+        "u": "https://github.com/jepsen-io/maelstrom/releases"
+      }
+    ]
+  },
+  {
+    "lab": "6.5840 Lab 1 MapReduce",
+    "weeks": "W16、W17",
+    "links": [
+      {
+        "t": "6.5840 Lab 1 頁面",
+        "u": "https://pdos.csail.mit.edu/6.824/labs/lab-mr.html"
+      }
+    ],
+    "code": "git clone git://g.csail.mit.edu/6.5840-golabs-2026 6.5840"
+  },
+  {
+    "lab": "6.5840 Lab 2 KV server",
+    "weeks": "W19",
+    "links": [
+      {
+        "t": "6.5840 Lab 2 頁面",
+        "u": "https://pdos.csail.mit.edu/6.824/labs/lab-kvsrv1.html"
+      }
+    ]
+  },
+  {
+    "lab": "6.5840 Lab 3 Raft",
+    "weeks": "W23、W24、W25、W26、W27",
+    "links": [
+      {
+        "t": "6.5840 Lab 3 頁面",
+        "u": "https://pdos.csail.mit.edu/6.824/labs/lab-raft1.html"
+      }
+    ]
+  },
+  {
+    "lab": "6.5840 Lab 4 KV Raft",
+    "weeks": "W28、W29",
+    "links": [
+      {
+        "t": "6.5840 Lab 4 頁面",
+        "u": "https://pdos.csail.mit.edu/6.824/labs/lab-kvraft1.html"
+      }
+    ]
+  },
+  {
+    "lab": "6.5840 Lab 5 Sharded KV",
+    "weeks": "W30",
+    "links": [
+      {
+        "t": "6.5840 Lab 5 頁面",
+        "u": "https://pdos.csail.mit.edu/6.824/labs/lab-shard1.html"
+      }
+    ]
+  }
+];
+
 // 密碼閘門：只是擋一般瀏覽，不是真正的安全機制（資料本來就在公開 repo 裡）。只存 SHA-256。
 const PW_HASH = "165940940a02a187e4463ff467090930038c5af8fc26107bf301e714f599a1da";
 const UNLOCK_KEY = "csapp-ddia-unlock-v1";
@@ -521,7 +699,13 @@ function recHtml(w) {
     <div class="rc-m">${esc(r.by)} · ${esc(r.year)} · ${esc(r.time)}</div>
     <div class="rc-w"><b>為什麼是經典</b>　${md(r.why)}</div></div>`).join("");
 }
-function labHtml(w) { if (!w.labx.length) return `<div class="tx">${md(w.lab)}</div>`; return `<div class="sum">${md(w.lab)}</div><div class="sub">里程碑與指令</div>${ul(w.labx)}`; }
+function dlHtml(w) {
+  const d = w.dl; if (!d) return "";
+  const links = d.links.map(l => ext(l.u, esc(l.t))).join(" · ");
+  if (d.same) return `<div class="dl dl-same">⬇️ 下載：同 <a href="#w${d.same}" data-jump="${d.same}">W${d.same}</a> — ${links}</div>`;
+  return `<div class="dl"><div class="dl-h">⬇️ 下載 · ${esc(d.lab)}</div><ul class="dl-l">${d.links.map(l => `<li>${ext(l.u, esc(l.t))}</li>`).join("")}${d.code ? `<li>repo：<code>${esc(d.code)}</code></li>` : ""}${d.repo ? `<li>repo：同 <a href="#w${d.repo}" data-jump="${d.repo}">W${d.repo}</a></li>` : ""}</ul></div>`;
+}
+function labHtml(w) { if (!w.labx.length) return `<div class="tx">${md(w.lab)}</div>${dlHtml(w)}`; return `<div class="sum">${md(w.lab)}</div>${dlHtml(w)}<div class="sub">里程碑與指令</div>${ul(w.labx)}`; }
 function specHtml(w) {
   const s = w.spec;
   if (!s) return `<div class="tx">${md(w.build)}</div>`;
@@ -638,6 +822,7 @@ function renderAll() { renderProgress(); renderHero(); renderFilters(); renderLi
 function init() {
   renderAll();
   renderReadIdx();
+  $("dlTable").innerHTML = `<tr><th>Lab</th><th>週次</th><th>下載</th></tr>` + LAB_DL.map(r => `<tr><td>${esc(r.lab)}</td><td>${esc(r.weeks)}</td><td>${r.links.map(l => ext(l.u, esc(l.t))).join("<br>")}${r.code ? `<br><code>${esc(r.code)}</code>` : ""}</td></tr>`).join("");
   $("links").innerHTML = LINKS.map(l => `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.title)}<small>${esc(l.site)}</small></a>`).join("");
   document.addEventListener("click", e => {
     if (e.target.classList && e.target.classList.contains("cb")) e.stopPropagation();
@@ -659,8 +844,8 @@ function init() {
     e.preventDefault();
     const d = $(a.dataset.sec); d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" });
   });
-  $("readIdx").addEventListener("click", e => {
-    const a = e.target.closest("[data-jump]"); if (!a) return;
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest("[data-jump]"); if (!a) return;
     e.preventDefault();
     if (filter !== "all") { filter = "all"; renderFilters(); renderList(); }
     const d = $("w" + a.dataset.jump); d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" });
