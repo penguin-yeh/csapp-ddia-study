@@ -197,6 +197,7 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 
 ```
 .
+├── index.html           # 離線進度頁（瀏覽器直接開）
 ├── csapp-labs/          # CS:APP 官方 Labs（W1–W13）
 │   ├── datalab/         # W1–W2
 │   ├── bomblab/         # W3–W4
@@ -215,4 +216,6 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
     └── ddia/
 ```
 
-每完成一週，就把上面對應的 `- [ ]` 改成 `- [x]`。
+每完成一週，就把上面對應的 `- [ ]` 改成 `- [x]`，並把 `index.html` 裡 `WEEKS` 資料該週的 `done` 改成 `true`。
+
+**進度頁怎麼開：** `git clone` 這個 repo（或在 GitHub 上 Download ZIP）後，直接用瀏覽器打開 `index.html` 就行，不需要網路或架站。頁面上的勾選只存在本機瀏覽器，正式進度以檔案裡的 `done` 欄位為準。
