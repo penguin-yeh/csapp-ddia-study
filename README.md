@@ -65,6 +65,9 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
   - 閱讀：CSAPP Ch1 系統漫遊；Ch2.1–2.3 資訊表示、整數
   - Lab：Data Lab：整數題（bitXor、isTmax、conditional 等）
   - 小專案：寫一個 `popcount` / `bitcount` 小工具，配單元測試涵蓋邊界值
+  - 影片：CMU 15-213 F15 Lecture 01、Lecture 02、Lecture 03、Recitation 3（官方 Panopto，連結見 [specs/W01.md](specs/W01.md)）
+  - 推薦：［論文］The UNIX Time-Sharing System（1974）；［部落格］The LMAX Architecture（2011）
+  - 完整規格（目標、影片、閱讀小節、Lab 指令、小專案 spec）：[specs/W01.md](specs/W01.md)
   - 筆記題目：用自己的話解釋：為什麼補數讓加減法共用同一套電路？哪些情況會溢位？
   - 面試準備：演算法：NeetCode 150 Arrays & Hashing 前 5 題
 - [ ] **W2 · 11/09 週 · 浮點數**
@@ -260,6 +263,9 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 - [NeetCode 150 題單](https://neetcode.io/practice/practice/neetcode150)
 - [NeetCode 練習首頁](https://neetcode.io/practice)
 - [Amazon Leadership Principles](https://www.amazon.jobs/content/en/our-workplace/leadership-principles)
+- [CMU 15-213 Fall 2015 錄影（官方 Panopto）](https://scs.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx#folderID=%22b96d90ae-9871-4fae-91e2-b1627b43e25e%22)
+- [CMU 15-213 Fall 2015 課表（對應 CSAPP 章節）](https://www.cs.cmu.edu/afs/cs/academic/class/15213-f15/www/schedule.html)
+- [CMU CSAPP 15-213 中英字幕（YouTube 非官方轉載）](https://www.youtube.com/playlist?list=PL22J-I2Pi-Gf0s1CGDVtt4vuvlyjLxfem)
 
 ## 資料夾結構
 
@@ -267,6 +273,7 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 .
 ├── index.html           # 進度頁（GitHub Pages / 離線都能開）
 ├── .nojekyll            # 讓 GitHub Pages 直接提供靜態檔
+├── specs/               # 每週完整規格（目前有 W01，之後逐週補）
 ├── csapp-labs/          # CS:APP 官方 Labs（W1–W13）
 │   ├── datalab/         # W1–W2
 │   ├── bomblab/         # W3–W4
