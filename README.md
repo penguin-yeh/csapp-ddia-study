@@ -41,7 +41,7 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 
 ## 每週技術精讀
 
-每週一推一份技術精讀（新的在上面），完整卡片也在 [進度頁](https://penguin-yeh.github.io/csapp-ddia-study/) 的「每週技術精讀」。
+每週一推一份技術精讀（新的在上面），在 [進度頁](https://penguin-yeh.github.io/csapp-ddia-study/) 會放進對應那一週的卡片裡（📰 本週精讀）。
 
 ### 2026/10/30 · W1 暖身 · 工程部落格 · 約 15 分鐘
 
@@ -287,4 +287,4 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 
 每完成一週，就把上面對應的 `- [ ]` 改成 `- [x]`，並把 `index.html` 裡 `WEEKS` 資料該週的 `done` 改成 `true`。
 
-**進度頁怎麼開：** 直接開 https://penguin-yeh.github.io/csapp-ddia-study/ （GitHub Pages，輸入密碼解鎖，同一台瀏覽器會記住）。也可以 `git clone` 後用瀏覽器打開 `index.html` 離線看。頁面上的勾選只存在本機瀏覽器，正式進度以檔案裡的 `done` 欄位為準；每週技術精讀寫在 `index.html` 的 `READINGS` 陣列。
+**進度頁怎麼開：** 直接開 https://penguin-yeh.github.io/csapp-ddia-study/ （GitHub Pages，輸入密碼解鎖，同一台瀏覽器會記住）。也可以 `git clone` 後用瀏覽器打開 `index.html` 離線看。頁面上的勾選只存在本機瀏覽器，正式進度以檔案裡的 `done` 欄位為準；每週技術精讀寫在 `index.html` 的 `READINGS` 陣列，用 `week` 掛到對應的週卡片；面試準備在 `WEEKS` 的 `algo` / `sysdesign` / `behavioral` 欄位。

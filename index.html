@@ -3,77 +3,155 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
 <title>CSAPP × DDIA 2e 學習進度</title>
 <style>
-:root{--bg:#f7f7f9;--card:#fff;--fg:#1d1d1f;--muted:#6b6b76;--line:#e4e4ea;--accent:#2563eb;--accent2:#7c3aed;--ok:#16a34a;--hl:#fff7e0;--hlb:#f5b301;--track:#e9e9ef}
-@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#181b22;--fg:#e8e8ee;--muted:#9a9aa8;--line:#2a2e38;--accent:#60a5fa;--accent2:#a78bfa;--ok:#4ade80;--hl:#2a2410;--hlb:#eab308;--track:#262a33}}
+:root{
+  --bg:#f6f7f9;--card:#fff;--fg:#1a1c20;--fg2:#4a4f5a;--muted:#6b7280;--line:#e5e7eb;--soft:#f1f3f6;
+  --accent:#2563eb;--ok:#16a34a;--hl:#f59e0b;--track:#e8eaef;
+  --c-read:#2563eb;--c-lab:#7c3aed;--c-build:#c2410c;--c-note:#0f766e;--c-reading:#be185d;--c-algo:#15803d;--c-sys:#a16207;--c-beh:#0e7490;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1014;--card:#171a20;--fg:#eceef2;--fg2:#c3c7d0;--muted:#9097a3;--line:#2a2f38;--soft:#1e222a;
+  --accent:#60a5fa;--ok:#4ade80;--hl:#fbbf24;--track:#262b34;
+  --c-read:#60a5fa;--c-lab:#a78bfa;--c-build:#fb923c;--c-note:#2dd4bf;--c-reading:#f472b6;--c-algo:#4ade80;--c-sys:#facc15;--c-beh:#22d3ee;
+}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
-main{max-width:860px;margin:0 auto;padding:32px 18px 64px}
-h1{font-size:1.7rem;margin:0 0 6px}
-h2{font-size:1.25rem;margin:36px 0 12px}
-.sub{color:var(--muted);margin:0 0 20px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px}
-.bar{height:10px;background:var(--track);border-radius:99px;overflow:hidden;margin:8px 0 4px}
-.bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width .3s}
-.row{display:flex;justify-content:space-between;gap:12px;font-size:.95rem}
-.big{font-size:1.1rem;font-weight:600}
-.phases{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-@media (max-width:600px){.phases{grid-template-columns:1fr}}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC","Segoe UI",sans-serif}
+main{max-width:900px;margin:0 auto;padding:28px 20px 72px}
+a{color:var(--accent)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em;background:var(--soft);border:1px solid var(--line);padding:0 5px;border-radius:5px;word-break:break-word}
+h1{font-size:1.5rem;line-height:1.35;margin:0}
+h2{font-size:1.15rem;margin:40px 0 14px;display:flex;align-items:baseline;gap:10px}
+h2 small{font-size:.82rem;font-weight:400;color:var(--muted)}
 .muted{color:var(--muted);font-size:.88rem}
-.now{border-left:4px solid var(--hlb);background:var(--hl)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px}
+button{font:inherit;cursor:pointer}
+.btn{white-space:nowrap;flex:none;font-size:.85rem;background:transparent;color:var(--fg2);border:1px solid var(--line);border-radius:8px;padding:4px 12px}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.prog{padding:18px 22px}
+.pr{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;font-size:.92rem}
+.pr+.pr{margin-top:10px}
+.pr .nm{min-width:7.5em;color:var(--fg2)}
+.pr.all .nm{font-weight:600;color:var(--fg)}
+.pr .num{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{height:8px;background:var(--track);border-radius:99px;overflow:hidden}
+.pr.all .bar{height:12px}
+.bar>span{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.pr.p2 .bar>span{background:var(--c-lab)}
+
+/* hero */
+.hero{margin-top:22px;border:2px solid var(--hl);overflow:hidden}
+.hero-hd{padding:16px 22px 14px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.kicker{font-size:.78rem;font-weight:700;letter-spacing:.06em;color:#000;background:var(--hl);border-radius:6px;padding:1px 8px}
+.hero-title{font-size:1.25rem;font-weight:700;line-height:1.4}
+.hero-sub{width:100%;color:var(--muted);font-size:.88rem;margin-top:-4px}
+
+/* filter */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.fchip{font-size:.85rem;border:1px solid var(--line);background:var(--card);color:var(--fg2);border-radius:99px;padding:3px 12px}
+.fchip[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+
+/* week rows */
+.phase{margin-top:8px}
 .week{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
-.week.current{border-color:var(--hlb);box-shadow:0 0 0 2px var(--hlb) inset}
-.week summary{list-style:none;display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer}
-.week summary::-webkit-details-marker{display:none}
-.week summary::after{content:"▸";margin-left:auto;color:var(--muted);transition:transform .2s}
-.week[open] summary::after{transform:rotate(90deg)}
-.week input{width:20px;height:20px;accent-color:var(--ok);flex:none;cursor:pointer}
-.wn{font-weight:700;min-width:3.2em;color:var(--accent)}
-.wt{font-weight:600}
-.wd{color:var(--muted);font-size:.85rem;white-space:nowrap}
-.tag{font-size:.75rem;background:var(--hlb);color:#000;border-radius:99px;padding:1px 8px;white-space:nowrap}
-.week.done .wt{text-decoration:line-through;color:var(--muted)}
-.local{font-size:.7rem;color:var(--muted);border:1px dashed var(--line);border-radius:6px;padding:0 5px}
-dl{margin:0;padding:0 16px 14px 46px;display:grid;grid-template-columns:auto 1fr;gap:6px 14px}
-@media (max-width:600px){dl{padding-left:16px;grid-template-columns:1fr}dt{margin-top:6px}}
-dt{color:var(--muted);font-size:.88rem;white-space:nowrap}
-dd{margin:0}
-dd.prep div+div{margin-top:4px}
-.ip table{width:100%;border-collapse:collapse;font-size:.92rem;margin:10px 0}
-.ip th,.ip td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
-.ip th{color:var(--muted);font-weight:500}
-.ip td:first-child,.ip td:nth-child(2){white-space:nowrap}
-.ip ol{padding-left:1.3em;margin:8px 0}
-.ip li{margin:4px 0}
-@media (max-width:600px){.ip td:nth-child(2){white-space:normal}}
-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--track);padding:1px 5px;border-radius:5px}
+.week.current{border-color:var(--hl);box-shadow:0 0 0 1px var(--hl)}
+.week>summary{list-style:none;display:grid;grid-template-columns:auto 3.2em 1fr auto auto;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.week>summary::-webkit-details-marker{display:none}
+.week>summary::after{content:"›";font-size:1.2rem;color:var(--muted);transition:transform .15s;line-height:1}
+.week[open]>summary::after{transform:rotate(90deg)}
+.week[open]>summary{border-bottom:1px solid var(--line)}
+.cb{width:20px;height:20px;accent-color:var(--ok);margin:0;cursor:pointer}
+.wn{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.wt{font-weight:600;min-width:0}
+.wt .wd{display:block;font-weight:400;font-size:.8rem;color:var(--muted)}
+.week.done .wt>span:first-child{text-decoration:line-through;color:var(--muted)}
+.chips{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.tchip{font-size:.72rem;line-height:1.5;border-radius:99px;padding:0 7px;color:var(--c);border:1px solid color-mix(in srgb,var(--c) 45%,transparent);background:color-mix(in srgb,var(--c) 8%,transparent);white-space:nowrap}
+.badge{font-size:.72rem;border-radius:99px;padding:0 7px;white-space:nowrap}
+.b-now{background:var(--hl);color:#000;font-weight:600}
+.b-local{border:1px dashed var(--muted);color:var(--muted)}
+.b-two{background:var(--c-reading);color:#fff}
+@media (prefers-color-scheme:dark){.b-two{color:#000}}
+
+/* blocks */
+.body{padding:16px 20px 20px}
+.grp{font-size:.75rem;font-weight:700;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+.grp:first-child{margin-top:0}
+.blk{--c:var(--accent);border-left:3px solid var(--c);background:color-mix(in srgb,var(--c) 5%,var(--card));border-radius:0 10px 10px 0;padding:9px 14px 10px;margin-bottom:8px}
+.blk .lb{font-size:.8rem;font-weight:700;color:var(--c);margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.blk .tx{color:var(--fg)}
+.t-read{--c:var(--c-read)}.t-lab{--c:var(--c-lab)}.t-build{--c:var(--c-build)}.t-note{--c:var(--c-note)}
+.t-reading{--c:var(--c-reading)}.t-algo{--c:var(--c-algo)}.t-sys{--c:var(--c-sys)}.t-beh{--c:var(--c-beh)}
+.rd+.rd{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.rd-title{font-weight:600;line-height:1.5}
+.rd-title a{color:var(--fg);text-decoration:none;border-bottom:1.5px solid var(--c-reading)}
+.rd-meta{font-size:.82rem;color:var(--muted);margin:2px 0 6px}
+.kv{display:grid;grid-template-columns:4.5em 1fr;gap:4px 10px;font-size:.95rem}
+.kv>dt{color:var(--muted);font-size:.82rem;padding-top:3px}
+.kv>dd{margin:0}
+.kv ol{margin:0;padding-left:1.2em}
+@media (max-width:640px){.kv{grid-template-columns:1fr;gap:0}.kv>dd{margin-bottom:6px}}
+
+/* filter view */
+.fitem{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:8px}
+.fitem.current{border-color:var(--hl)}
+.fhd{display:flex;gap:10px;align-items:baseline;margin-bottom:6px;flex-wrap:wrap}
+.fitem .blk{margin:0}
+
+/* bottom */
+.idx{list-style:none;margin:0;padding:0}
+.idx li{padding:10px 16px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.idx li+li{border-top:1px solid var(--line)}
 .links{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media (max-width:600px){.links{grid-template-columns:1fr}}
-.links a{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--fg);text-decoration:none}
+.links a{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;color:var(--fg);text-decoration:none;font-size:.92rem;line-height:1.5}
 .links a:hover{border-color:var(--accent)}
 .links small{display:block;color:var(--muted)}
-.note{font-size:.85rem;color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:10px 14px;margin:10px 0}
-button{font:inherit;font-size:.85rem;background:transparent;color:var(--accent);border:1px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer}
-.tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+details.about{margin-top:40px}
+details.about>summary{cursor:pointer;font-weight:700;font-size:1.05rem;padding:14px 20px;list-style:none}
+details.about>summary::-webkit-details-marker{display:none}
+details.about>summary::before{content:"▸ ";color:var(--muted)}
+details.about[open]>summary::before{content:"▾ "}
+.about .in{padding:0 22px 22px}
+.about h3{font-size:1rem;margin:22px 0 8px}
+.about h3:first-child{margin-top:4px}
+.about p{margin:6px 0;color:var(--fg2)}
+.about table{width:100%;border-collapse:collapse;font-size:.9rem;margin:8px 0}
+.about th,.about td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.about th{color:var(--muted);font-weight:500}
+.about td:nth-child(-n+2){white-space:nowrap}
+.about ol{padding-left:1.3em;margin:6px 0;color:var(--fg2)}
+.about li{margin:4px 0}
+.about li b{color:var(--fg)}
+.foot{margin-top:24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+
+@media (max-width:640px){
+  main{padding:18px 14px 56px}
+  h1{font-size:1.25rem}
+  .prog{padding:14px 16px}
+  .pr{grid-template-columns:1fr auto;gap:2px 10px}
+  .pr .bar{grid-column:1/-1;grid-row:2}
+  .hero-hd{padding:14px 16px 12px}
+  .body{padding:14px 14px 16px}
+  .week>summary{grid-template-columns:auto 2.6em 1fr auto;padding:10px 12px;gap:8px}
+  .week>summary .chips{grid-column:3/-1;grid-row:2;justify-content:flex-start}
+  .week>summary::after{grid-column:4;grid-row:1}
+  .links{grid-template-columns:1fr}
+  .about td:nth-child(2){white-space:normal}
+}
+
+/* gate */
 #gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px;z-index:10}
 #gate[hidden]{display:none}
 .gbox{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px 24px;width:100%;max-width:360px;text-align:center}
-.gbox h1{font-size:1.2rem;margin:0 0 6px}
+.gbox h1{font-size:1.15rem;margin:0 0 6px}
 .gbox input{font:inherit;width:100%;padding:10px 12px;margin:14px 0 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);text-align:center;letter-spacing:.3em}
-.gbox button{width:100%;padding:9px;background:var(--accent);color:#fff;border:none}
+.gbox button{width:100%;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:10px}
 #gerr{color:#dc2626;font-size:.88rem;min-height:1.4em;margin-top:8px}
-.rd{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:10px}
-.rd.current{box-shadow:0 0 0 2px var(--hlb) inset;border-color:var(--hlb)}
-.rd h3{margin:4px 0 2px;font-size:1.05rem;line-height:1.4}
-.rd h3 a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--accent)}
-.rd .meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:.82rem;color:var(--muted)}
-.chip{border:1px solid var(--line);border-radius:99px;padding:0 8px}
-.rd .lbl{font-size:.82rem;color:var(--muted);margin-top:10px}
-.rd ol{margin:4px 0;padding-left:1.3em}
-.rd p{margin:4px 0}
-.rd .extra{border-left:3px solid var(--line);padding-left:10px;margin-top:10px}
-.rd .extra a{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -86,86 +164,143 @@ button{font:inherit;font-size:.85rem;background:transparent;color:var(--accent);
     <div id="gerr"></div>
   </div>
 </div>
+
 <main id="app" hidden>
-<h1>CSAPP × DDIA 2e 實作學習計畫</h1>
-<p class="sub">30 週、每週 8–10 小時：前 14 週 CSAPP 配 CMU 官方 Labs，後 16 週 DDIA 第二版配 MIT 6.5840 與 Gossip Glomers。</p>
-
-<section class="panel">
-  <div class="row"><span class="big">整體進度</span><span id="allTxt"></span></div>
-  <div class="bar"><span id="allBar"></span></div>
-  <div class="phases">
-    <div><div class="row"><span>第一階段 CSAPP + CMU Labs</span><span id="p1Txt"></span></div><div class="bar"><span id="p1Bar"></span></div><div class="muted">2026/11/02 – 2027/02/07</div></div>
-    <div><div class="row"><span>第二階段 DDIA 2e + 6.5840</span><span id="p2Txt"></span></div><div class="bar"><span id="p2Bar"></span></div><div class="muted">2027/02/08 – 2027/05/30</div></div>
+  <div class="top">
+    <div>
+      <h1>CSAPP × DDIA 2e 實作學習計畫</h1>
+      <div class="muted">2026/11/02 – 2027/05/30 · 30 週</div>
+    </div>
+    <button class="btn" id="lockBtn">🔒 重新上鎖</button>
   </div>
-</section>
-<section class="panel now" id="nowPanel"></section>
 
-<h2>每週技術精讀</h2>
-<div id="readings"></div>
+  <section class="card prog">
+    <div class="pr all"><span class="nm">整體進度</span><div class="bar"><span id="allBar"></span></div><span class="num" id="allTxt"></span></div>
+    <div class="pr p1"><span class="nm">CSAPP</span><div class="bar"><span id="p1Bar"></span></div><span class="num" id="p1Txt"></span></div>
+    <div class="pr p2"><span class="nm">DDIA 2e</span><div class="bar"><span id="p2Bar"></span></div><span class="num" id="p2Txt"></span></div>
+  </section>
 
-<h2>面試準備軌道</h2>
-<section class="panel ip">
-  <p style="margin-top:0">跟 30 週主線並行，每週多 3–4 小時（例如兩個平日晚上，或週末一個時段）。演算法從 W1 開始，系統設計從 W20 加入，行為面試從 W24 加入，W28–W30 用 45 分鐘計時 mock 收尾。每週內容在各週卡片的「面試準備」。</p>
-  <table>
-    <tr><th>項目</th><th>期間</th><th>內容</th></tr>
-    <tr><td>演算法</td><td>W1–W29</td><td>NeetCode 150 依主題刷（18 個主題、150 題），每週 4–7 題；Bit Manipulation 提前到 W2 配 Data Lab</td></tr>
-    <tr><td>系統設計</td><td>W20–W30</td><td>每週一題，對應當週 DDIA 章節，計時 45 分鐘出聲練</td></tr>
-    <tr><td>行為面試</td><td>W24–W30</td><td>寫 7 個 STAR 故事：衝突、主導負責、失敗、模糊情境、影響、使用者、技術深挖，對照 Amazon Leadership Principles</td></tr>
-    <tr><td>計時 mock</td><td>W28–W30</td><td>45 分鐘模擬面試：演算法、系統設計、behavioral</td></tr>
-  </table>
-  <ol>
-    <li><b>平日晚上 ×2 · 演算法（約 2–2.5 小時）</b>：每題先自己想 20–25 分鐘，想不出來再看 NeetCode 解說影片；隔幾天不看答案重寫一次。</li>
-    <li><b>週末 · 系統設計（W20 起，約 1 小時）</b>：計時 45 分鐘、出聲講：需求與規模估算 → API → 資料模型 → 高階架構 → 深挖瓶頸與取捨，講完對照當週 DDIA 章節補洞。</li>
-    <li><b>週末 · 行為面試（W24 起，約 30 分鐘）</b>：用 STAR（Situation、Task、Action、Result）寫 1–2 個故事，標出對應的 Leadership Principles，Result 盡量有數字。</li>
-  </ol>
-  <div class="muted">題數依 neetcode.io 上 NeetCode 150 的主題分組（2026/10/30 查）。忙的週先保 Lab，面試題可以順延。</div>
-</section>
+  <section class="card hero" id="hero"></section>
 
-<div class="note">正式進度以這個檔案裡 <code>WEEKS</code> 資料的 <code>done</code> 欄位為準（完成一週就改成 <code>true</code> 並 commit）。在這頁直接勾選只會存在這台電腦瀏覽器的 localStorage，方便自己臨時記錄，標成「本機」的就是還沒寫回檔案的。</div>
-<div class="tools"><button id="openCur">展開本週</button><button id="toggleAll">全部展開 / 收合</button><button id="resetLocal">清除本機勾選</button><button id="lockBtn">重新上鎖</button></div>
+  <h2>每週清單</h2>
+  <div class="filters" id="filters" role="toolbar" aria-label="依類型篩選"></div>
+  <div id="list"></div>
 
-<h2>第一階段：CSAPP + CMU Labs</h2>
-<div id="phase1"></div>
-<h2>第二階段：DDIA 2e + 6.5840</h2>
-<div id="phase2"></div>
+  <h2>所有精讀 <small>新的在上面，點週次跳到該週</small></h2>
+  <ul class="card idx" id="readIdx"></ul>
 
-<h2>資源連結</h2>
-<div class="links" id="links"></div>
+  <h2>資源連結</h2>
+  <div class="links" id="links"></div>
+
+  <details class="card about">
+    <summary>關於這份計畫</summary>
+    <div class="in">
+      <h3>為什麼這樣排</h3>
+      <p><b>先 CSAPP、再 DDIA，不交錯。</b>CSAPP 的行程、記憶體、網路、並行是 DDIA 的地基；Proxy Lab 寫完再進分散式，6.5840 的 RPC 和並行 bug 會好懂很多。兩本同時讀，每週 8–10 小時會被切得太碎。</p>
+      <table>
+        <tr><th>階段</th><th>期間</th><th>週數</th><th>主軸</th></tr>
+        <tr><td>CSAPP</td><td>2026/11/02 – 2027/02/07</td><td>14</td><td>Data → Bomb → Attack → Cache → Shell → Malloc → Proxy</td></tr>
+        <tr><td>DDIA 2e</td><td>2027/02/08 – 2027/05/30</td><td>16</td><td>Gossip Glomers 暖身 → MapReduce → KV → Raft → KV Raft</td></tr>
+      </table>
+      <p>CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 以速讀為主。6.5840 用 Go，所以第 14 週安排 Go 暖身。Raft（W24–W27）是整份計畫最難的段落，時間不夠就讓它延一兩週，不要硬趕。</p>
+      <p class="muted">第一階段：CS:APP 第 3 版，Labs 用官網的 Self-Study Handout。第二階段：章名依 O'Reilly 第二版目錄（2026 年出版，共 14 章）；6.5840 Lab 編號依 Spring 2026 課表。</p>
+
+      <h3>每週節奏</h3>
+      <ol>
+        <li><b>週一到週三 · 閱讀（約 3 小時）</b>：讀當週章節，做書裡的 practice problems，不要只看。</li>
+        <li><b>週四到週五 · Lab（約 3–4 小時）</b>：做當週的 Lab 段落，卡住先自己 debug 30 分鐘再查資料。</li>
+        <li><b>週六 · 小專案（約 2 小時）</b>：做當週的「小東西」，程式碼推上 GitHub。</li>
+        <li><b>週日 · 筆記（約 1 小時）</b>：回答當週的筆記題目，用自己的話寫，講不清楚的地方就是還沒懂。</li>
+      </ol>
+
+      <h3>面試準備軌道</h3>
+      <p>跟 30 週主線並行，每週多 3–4 小時（例如兩個平日晚上，或週末一個時段）。演算法從 W1 開始，系統設計從 W20 加入，行為面試從 W24 加入，W28–W30 用 45 分鐘計時 mock 收尾。</p>
+      <table>
+        <tr><th>項目</th><th>期間</th><th>內容</th></tr>
+        <tr><td>演算法</td><td>W1–W29</td><td>NeetCode 150 依主題刷（18 個主題、150 題），每週 4–7 題；Bit Manipulation 提前到 W2 配 Data Lab</td></tr>
+        <tr><td>系統設計</td><td>W20–W30</td><td>每週一題，對應當週 DDIA 章節，計時 45 分鐘出聲練</td></tr>
+        <tr><td>行為面試</td><td>W24–W30</td><td>寫 7 個 STAR 故事：衝突、主導負責、失敗、模糊情境、影響、使用者、技術深挖，對照 Amazon Leadership Principles</td></tr>
+        <tr><td>計時 mock</td><td>W28–W30</td><td>45 分鐘模擬面試：演算法、系統設計、behavioral</td></tr>
+      </table>
+      <ol>
+        <li><b>平日晚上 ×2 · 演算法（約 2–2.5 小時）</b>：每題先自己想 20–25 分鐘，想不出來再看 NeetCode 解說影片；隔幾天不看答案重寫一次。</li>
+        <li><b>週末 · 系統設計（W20 起，約 1 小時）</b>：計時 45 分鐘、出聲講：需求與規模估算 → API → 資料模型 → 高階架構 → 深挖瓶頸與取捨，講完對照當週 DDIA 章節補洞。</li>
+        <li><b>週末 · 行為面試（W24 起，約 30 分鐘）</b>：用 STAR（Situation、Task、Action、Result）寫 1–2 個故事，標出對應的 Leadership Principles，Result 盡量有數字。</li>
+      </ol>
+      <p class="muted">題數依 neetcode.io 上 NeetCode 150 的主題分組（2026/10/30 查）。忙的週先保 Lab，面試題可以順延。</p>
+
+      <h3>進度怎麼記</h3>
+      <p>正式進度以這個檔案裡 <code>WEEKS</code> 的 <code>done</code> 欄位為準（完成一週就改成 <code>true</code> 並 commit）。在頁面上直接勾選只存在這台電腦的瀏覽器，標「本機」的就是還沒寫回檔案的。</p>
+      <p><button class="btn" id="resetLocal">清除本機勾選</button></p>
+    </div>
+  </details>
 </main>
+
 <script>
+// ===== 資料 =====
 // 正式進度：完成一週就把該週的 done 改成 true 再 commit。
+// algo / sysdesign / behavioral 為空字串時，該週不顯示那個區塊。
 const WEEKS = [
-  {"n": 1, "date": "11/02", "title": "位元與整數", "read": "CSAPP Ch1 系統漫遊；Ch2.1–2.3 資訊表示、整數", "lab": "Data Lab：整數題（bitXor、isTmax、conditional 等）", "build": "寫一個 `popcount` / `bitcount` 小工具，配單元測試涵蓋邊界值", "note": "用自己的話解釋：為什麼補數讓加減法共用同一套電路？哪些情況會溢位？", "prep": "演算法：NeetCode 150 Arrays & Hashing 前 5 題", "phase": 1, "done": false},
-  {"n": 2, "date": "11/09", "title": "浮點數", "read": "Ch2.4 浮點數", "lab": "Data Lab：浮點題（floatScale2、floatFloat2Int 等），完成整個 Lab", "build": "CLI：輸入一個 float，印出 sign / exponent / fraction 與實際值", "note": "為什麼 0.1 + 0.2 ≠ 0.3？denormalized 數存在的意義是什麼？", "prep": "演算法：NeetCode 150 Bit Manipulation 全部 7 題（提前做，配 Data Lab）", "phase": 1, "done": false},
-  {"n": 3, "date": "11/16", "title": "機器碼：控制流程", "read": "Ch3.1–3.6 組合語言基礎、算術、條件與迴圈", "lab": "Bomb Lab：phase 1–3（學會 `gdb` 和 `objdump -d`）", "build": "同一段 C 用 `-O0` 和 `-O2` 編譯，對照組合語言差異", "note": "畫出 if / switch / loop 對應的組語樣板，`switch` 什麼時候會變成跳轉表？", "prep": "演算法：Arrays & Hashing 後 4 題", "phase": 1, "done": false},
-  {"n": 4, "date": "11/23", "title": "機器碼：程序與資料", "read": "Ch3.7–3.9 程序呼叫、陣列、結構", "lab": "Bomb Lab：phase 4–6（含 secret phase 可選）", "build": "手畫一次遞迴函式的 stack frame，再用 `gdb` 單步驗證", "note": "callee-saved 與 caller-saved 暫存器的分工，以及為什麼要這樣分", "prep": "演算法：Two Pointers 全部 5 題", "phase": 1, "done": false},
-  {"n": 5, "date": "11/30", "title": "緩衝區溢位", "read": "Ch3.10 指標、緩衝區溢位與防護", "lab": "Attack Lab：code injection 3 題 + ROP 2 題", "build": "寫一個有漏洞的小程式，開關 `-fstack-protector`、ASLR 觀察差異", "note": "canary、ASLR、NX 各擋住哪種攻擊？ROP 為什麼能繞過 NX？", "prep": "演算法：Sliding Window 全部 6 題", "phase": 1, "done": false},
-  {"n": 6, "date": "12/07", "title": "記憶體階層", "read": "Ch6 記憶體階層（Ch4 處理器架構可略過或之後補）", "lab": "Cache Lab Part A：寫一個 cache 模擬器", "build": "benchmark：二維陣列按列走 vs 按行走，量出時間差", "note": "解釋 locality，並用你的 benchmark 數字當證據", "prep": "演算法：Stack 全部 6 題", "phase": 1, "done": false},
-  {"n": 7, "date": "12/14", "title": "效能最佳化", "read": "Ch5 速讀（5.1–5.9），重點放在 loop unrolling 與 memory aliasing", "lab": "Cache Lab Part B：最佳化矩陣轉置的 miss 數", "build": "用 `perf stat` 量自己的轉置版本 cache miss", "note": "blocking 為什麼能降低 miss？跟資料庫的 page 有什麼共通點？", "prep": "演算法：Binary Search 全部 7 題", "phase": 1, "done": false},
-  {"n": 8, "date": "12/21", "title": "連結與行程", "read": "Ch7 連結（速讀）；Ch8.1–8.4 例外控制流、行程", "lab": "Shell Lab：先完成 `eval`、內建指令、fork/exec", "build": "小程式：fork 出 N 個子行程，父行程用 `waitpid` 回收並印 exit status", "note": "static vs dynamic linking 的取捨；zombie 和 orphan 行程是怎麼產生的", "prep": "演算法：Linked List 前 6 題", "phase": 1, "done": false},
-  {"n": 9, "date": "12/28", "title": "訊號", "read": "Ch8.5–8.8 訊號、非區域跳轉", "lab": "Shell Lab：完成 job control（ctrl-c、ctrl-z、fg、bg、jobs）", "build": "故意寫出 signal handler 的 race，再用 `sigprocmask` 修好", "note": "為什麼 handler 裡只能呼叫 async-signal-safe 函式？", "prep": "演算法：Linked List 後 5 題", "phase": 1, "done": false},
-  {"n": 10, "date": "01/04", "title": "虛擬記憶體", "read": "Ch9.1–9.8 位址翻譯、TLB、`mmap`", "lab": "Malloc Lab：先做 implicit free list 版本，能過正確性測試", "build": "用 `mmap` 讀大檔 vs `read()`，比較速度與 page fault 次數", "note": "一次 load 指令從虛擬位址到拿到資料，經過了哪些步驟？", "prep": "演算法：Trees 第 1–5 題", "phase": 1, "done": false},
-  {"n": 11, "date": "01/11", "title": "動態記憶體配置", "read": "Ch9.9–9.11 動態配置、GC 概念、常見記憶體 bug", "lab": "Malloc Lab：改成 explicit 或 segregated free list，拉高 util 與 throughput", "build": "把 allocator 的 util / throughput 做成表格，記錄每次改動的效果", "note": "first-fit、best-fit、segregated fit 的取捨，跟 jemalloc / tcmalloc 的設計對照", "prep": "演算法：Trees 第 6–10 題", "phase": 1, "done": false},
-  {"n": 12, "date": "01/18", "title": "I/O 與網路", "read": "Ch10 系統層級 I/O；Ch11 網路程式設計", "lab": "Proxy Lab Part I：循序版 HTTP proxy", "build": "照書做 Tiny Web Server，用 `curl` 和瀏覽器測", "note": "socket → bind → listen → accept 的流程；RIO 套件解決了什麼問題？", "prep": "演算法：Trees 第 11–15 題", "phase": 1, "done": false},
-  {"n": 13, "date": "01/25", "title": "並行程式設計", "read": "Ch12 並行：行程、I/O 多工、執行緒、同步", "lab": "Proxy Lab Part II + III：多執行緒 + LRU 快取", "build": "把 proxy 改成 thread pool，壓測比較 thread-per-request", "note": "thread-per-request、thread pool、event loop（epoll）各適合什麼場景？", "prep": "演算法：Tries 全部 3 題 + Heap / Priority Queue 前 2 題", "phase": 1, "done": false},
-  {"n": 14, "date": "02/01", "title": "緩衝週 + Go 暖身", "read": "回顧 CSAPP 筆記，寫一篇總結；開始 A Tour of Go", "lab": "補完前面沒做完的 Lab", "build": "用 Go 重寫 Tiny Web Server 的核心，為 6.5840 熱身", "note": "CSAPP 總結：哪三個觀念最改變你寫程式的方式？（春節前後，進度可放慢）", "prep": "演算法：Heap / Priority Queue 後 5 題；回頭重寫前面卡住的題目", "phase": 1, "done": false},
-  {"n": 15, "date": "02/08", "title": "架構取捨與非功能需求", "read": "DDIA 2e Ch1 Trade-Offs in Data Systems Architecture；Ch2 Defining Nonfunctional Requirements", "lab": "Gossip Glomers #1 Echo、#2 Unique ID Generation（熟悉 Maelstrom）", "build": "替自己公司的一個服務寫出 p50 / p99 延遲與負載描述", "note": "為什麼看 p99 而不是平均？用 Ch2 的社群時間軸案例練一次 fan-out 取捨", "prep": "演算法：Backtracking 前 5 題", "phase": 2, "done": false},
-  {"n": 16, "date": "02/15", "title": "資料模型", "read": "Ch3 Data Models and Query Languages", "lab": "6.5840 Lab 1 MapReduce：先讀 MapReduce 論文，寫 worker", "build": "同一份資料分別用關聯式、文件式、圖模型建模，比較查詢寫法", "note": "什麼情況選 document model？event sourcing / CQRS 解決了什麼？", "prep": "演算法：Backtracking 後 5 題", "phase": 2, "done": false},
-  {"n": 17, "date": "02/22", "title": "儲存引擎（上）", "read": "Ch4 Storage and Retrieval：Log-Structured Storage、B-Trees、兩者比較", "lab": "6.5840 Lab 1：完成 coordinator、容錯（worker 掛掉重派）", "build": "迷你 LSM-tree KV：WAL + memtable + SSTable 落盤", "note": "LSM-tree vs B-tree 的寫放大、讀放大、空間放大", "prep": "演算法：Graphs 第 1–5 題", "phase": 2, "done": false},
-  {"n": 18, "date": "03/01", "title": "儲存引擎（下）", "read": "Ch4 後半：分析型儲存、列式儲存、全文與向量索引", "lab": "Gossip Glomers #3 Broadcast（3a–3c）", "build": "幫 LSM-tree 加 compaction 和 Bloom filter，量讀取效能變化", "note": "OLTP 與 OLAP 的儲存為什麼長得不一樣？", "prep": "演算法：Graphs 第 6–9 題", "phase": 2, "done": false},
-  {"n": 19, "date": "03/08", "title": "編碼與演進", "read": "Ch5 Encoding and Evolution", "lab": "6.5840 Lab 2 Key/Value server（線性一致的單機 KV、處理掉包）", "build": "同一份資料用 JSON 與 Protobuf 編碼，比大小與速度；試一次 schema 演進", "note": "向前相容 vs 向後相容；durable execution 是什麼？", "prep": "演算法：Graphs 第 10–13 題", "phase": 2, "done": false},
-  {"n": 20, "date": "03/15", "title": "複製", "read": "Ch6 Replication", "lab": "Gossip Glomers #3 Broadcast（3d–3e，效率與網路分割）", "build": "幫迷你 KV 加上 leader-follower 非同步複製", "note": "replication lag 會造成哪些異常？read-your-writes 怎麼做？", "prep": "演算法：Advanced Graphs 全部 6 題｜系統設計：分散式 Key-Value Store（複製、quorum 讀寫），45 分鐘出聲練", "phase": 2, "done": false},
-  {"n": 21, "date": "03/22", "title": "分片", "read": "Ch7 Sharding", "lab": "Gossip Glomers #4 Grow-Only Counter、#5 Kafka-Style Log", "build": "實作 consistent hashing ring，模擬加減節點時的資料搬移量", "note": "key range vs hash 分片；hot spot 怎麼緩解？", "prep": "演算法：1-D DP 前 6 題｜系統設計：短網址服務（ID 生成、依 key 分片、熱點）", "phase": 2, "done": false},
-  {"n": 22, "date": "03/29", "title": "交易（上）", "read": "Ch8 Transactions：ACID、弱隔離等級、snapshot isolation", "lab": "Gossip Glomers #6 Totally-Available Transactions", "build": "在迷你 KV 上實作 MVCC 版 snapshot isolation", "note": "write skew 的例子，以及哪種隔離等級能防住它", "prep": "演算法：1-D DP 後 6 題｜系統設計：秒殺 / 訂票下單（防超賣、隔離等級）", "phase": 2, "done": false},
-  {"n": 23, "date": "04/05", "title": "交易（下）", "read": "Ch8 後半：serializability（serial execution、2PL、SSI）、分散式交易", "lab": "讀 Raft 論文（extended version）前半，準備 Lab 3", "build": "寫一個 2PC 模擬器，故意讓 coordinator 在不同時間點掛掉", "note": "2PC 為什麼會卡住？跟 consensus 差在哪？", "prep": "演算法：2-D DP 前 6 題｜系統設計：支付系統（冪等、2PC vs saga）", "phase": 2, "done": false},
-  {"n": 24, "date": "04/12", "title": "分散式系統的麻煩", "read": "Ch9 The Trouble with Distributed Systems", "lab": "6.5840 Lab 3A Raft leader election", "build": "（本週以 Lab 為主）", "note": "unreliable network、unreliable clock、process pause 各舉一個真實事故", "prep": "演算法：2-D DP 後 5 題｜系統設計：分散式限流器 Rate Limiter（計數同步、時鐘誤差）｜行為面試：學 STAR 架構，寫故事 1「衝突」（Have Backbone; Disagree and Commit / Earn Trust）", "phase": 2, "done": false},
-  {"n": 25, "date": "04/19", "title": "一致性與共識（上）", "read": "Ch10 Consistency and Consensus：線性一致性、ID 生成與邏輯時鐘", "lab": "6.5840 Lab 3B Raft log replication", "build": "（本週以 Lab 為主）", "note": "linearizability vs serializability；Lamport clock 能保證什麼、不能保證什麼", "prep": "演算法：Greedy 前 4 題｜系統設計：分散式 ID 生成器 + 分散式鎖（fencing token）｜行為面試：故事 2「主導負責」（Ownership）", "phase": 2, "done": false},
-  {"n": 26, "date": "04/26", "title": "一致性與共識（下）", "read": "Ch10 共識一節", "lab": "6.5840 Lab 3C persistence", "build": "（本週以 Lab 為主）", "note": "用 Raft 的角度解釋 FLP、quorum 和 fencing token", "prep": "演算法：Greedy 後 4 題｜系統設計：設定中心 / 服務發現（etcd、ZooKeeper 類）｜行為面試：故事 3「失敗與學到什麼」（Learn and Be Curious / Earn Trust）", "phase": 2, "done": false},
-  {"n": 27, "date": "05/03", "title": "Raft 收尾", "read": "回顧 Ch9–10 筆記（本週不讀新章）", "lab": "6.5840 Lab 3D log compaction / snapshot", "build": "把 Raft 的 debug log 做成可視化（依 term、server 上色）", "note": "Raft 實作踩過的三個坑，以及怎麼抓到的", "prep": "演算法：Intervals 全部 6 題｜系統設計：聊天系統（訊息順序、離線送達、在線狀態）｜行為面試：故事 4「模糊情境下做決定」（Bias for Action / Are Right, A Lot）", "phase": 2, "done": false},
-  {"n": 28, "date": "05/10", "title": "批次處理", "read": "Ch11 Batch Processing", "lab": "6.5840 Lab 4A KV Raft：在 Raft 上做 KV 服務", "build": "對照自己 Lab 1 的 MapReduce，列出跟 Spark 的差異", "note": "為什麼 MapReduce 讓位給 dataflow 引擎？", "prep": "演算法：Math & Geometry 前 4 題 + 1 場 45 分鐘計時 mock（演算法）｜系統設計：網頁爬蟲 + 批次建索引｜行為面試：故事 5「做出影響」（Deliver Results）、故事 6「為使用者著想」（Customer Obsession）", "phase": 2, "done": false},
-  {"n": 29, "date": "05/17", "title": "串流處理", "read": "Ch12 Stream Processing", "lab": "6.5840 Lab 4B+C：snapshot 與重複請求處理", "build": "用 Go 寫一個小型 stream processor：讀 log、做 tumbling window 計數", "note": "exactly-once 實際上是怎麼做到的？", "prep": "演算法：Math & Geometry 後 4 題 + 1 場 45 分鐘計時 mock｜系統設計：分散式訊息佇列（Kafka 類），45 分鐘計時 mock｜行為面試：故事 7「深挖技術問題」（Dive Deep），整理故事 × Leadership Principles 對照表", "phase": 2, "done": false},
-  {"n": 30, "date": "05/24", "title": "收尾與總結", "read": "Ch13 A Philosophy of Streaming Systems；Ch14 Doing the Right Thing", "lab": "可選：6.5840 Lab 5 Sharded KV", "build": "把 LSM KV、Raft、proxy 整理成 GitHub 作品集，各寫 README", "note": "全書總結 + 拿一題系統設計題（例如設計 Twitter timeline）用學到的東西完整回答一次", "prep": "總複習：2 場 45 分鐘計時 mock（演算法 + 系統設計「News Feed / Twitter timeline」），重寫錯題清單｜行為面試：每個故事練到 2 分鐘內講完，做一次完整 behavioral mock", "phase": 2, "done": false}
+  {"n": 1, "date": "11/02", "title": "位元與整數", "read": "CSAPP Ch1 系統漫遊；Ch2.1–2.3 資訊表示、整數", "lab": "Data Lab：整數題（bitXor、isTmax、conditional 等）", "build": "寫一個 `popcount` / `bitcount` 小工具，配單元測試涵蓋邊界值", "note": "用自己的話解釋：為什麼補數讓加減法共用同一套電路？哪些情況會溢位？", "algo": "NeetCode 150 Arrays & Hashing 前 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 2, "date": "11/09", "title": "浮點數", "read": "Ch2.4 浮點數", "lab": "Data Lab：浮點題（floatScale2、floatFloat2Int 等），完成整個 Lab", "build": "CLI：輸入一個 float，印出 sign / exponent / fraction 與實際值", "note": "為什麼 0.1 + 0.2 ≠ 0.3？denormalized 數存在的意義是什麼？", "algo": "NeetCode 150 Bit Manipulation 全部 7 題（提前做，配 Data Lab）", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 3, "date": "11/16", "title": "機器碼：控制流程", "read": "Ch3.1–3.6 組合語言基礎、算術、條件與迴圈", "lab": "Bomb Lab：phase 1–3（學會 `gdb` 和 `objdump -d`）", "build": "同一段 C 用 `-O0` 和 `-O2` 編譯，對照組合語言差異", "note": "畫出 if / switch / loop 對應的組語樣板，`switch` 什麼時候會變成跳轉表？", "algo": "Arrays & Hashing 後 4 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 4, "date": "11/23", "title": "機器碼：程序與資料", "read": "Ch3.7–3.9 程序呼叫、陣列、結構", "lab": "Bomb Lab：phase 4–6（含 secret phase 可選）", "build": "手畫一次遞迴函式的 stack frame，再用 `gdb` 單步驗證", "note": "callee-saved 與 caller-saved 暫存器的分工，以及為什麼要這樣分", "algo": "Two Pointers 全部 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 5, "date": "11/30", "title": "緩衝區溢位", "read": "Ch3.10 指標、緩衝區溢位與防護", "lab": "Attack Lab：code injection 3 題 + ROP 2 題", "build": "寫一個有漏洞的小程式，開關 `-fstack-protector`、ASLR 觀察差異", "note": "canary、ASLR、NX 各擋住哪種攻擊？ROP 為什麼能繞過 NX？", "algo": "Sliding Window 全部 6 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 6, "date": "12/07", "title": "記憶體階層", "read": "Ch6 記憶體階層（Ch4 處理器架構可略過或之後補）", "lab": "Cache Lab Part A：寫一個 cache 模擬器", "build": "benchmark：二維陣列按列走 vs 按行走，量出時間差", "note": "解釋 locality，並用你的 benchmark 數字當證據", "algo": "Stack 全部 6 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 7, "date": "12/14", "title": "效能最佳化", "read": "Ch5 速讀（5.1–5.9），重點放在 loop unrolling 與 memory aliasing", "lab": "Cache Lab Part B：最佳化矩陣轉置的 miss 數", "build": "用 `perf stat` 量自己的轉置版本 cache miss", "note": "blocking 為什麼能降低 miss？跟資料庫的 page 有什麼共通點？", "algo": "Binary Search 全部 7 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 8, "date": "12/21", "title": "連結與行程", "read": "Ch7 連結（速讀）；Ch8.1–8.4 例外控制流、行程", "lab": "Shell Lab：先完成 `eval`、內建指令、fork/exec", "build": "小程式：fork 出 N 個子行程，父行程用 `waitpid` 回收並印 exit status", "note": "static vs dynamic linking 的取捨；zombie 和 orphan 行程是怎麼產生的", "algo": "Linked List 前 6 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 9, "date": "12/28", "title": "訊號", "read": "Ch8.5–8.8 訊號、非區域跳轉", "lab": "Shell Lab：完成 job control（ctrl-c、ctrl-z、fg、bg、jobs）", "build": "故意寫出 signal handler 的 race，再用 `sigprocmask` 修好", "note": "為什麼 handler 裡只能呼叫 async-signal-safe 函式？", "algo": "Linked List 後 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 10, "date": "01/04", "title": "虛擬記憶體", "read": "Ch9.1–9.8 位址翻譯、TLB、`mmap`", "lab": "Malloc Lab：先做 implicit free list 版本，能過正確性測試", "build": "用 `mmap` 讀大檔 vs `read()`，比較速度與 page fault 次數", "note": "一次 load 指令從虛擬位址到拿到資料，經過了哪些步驟？", "algo": "Trees 第 1–5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 11, "date": "01/11", "title": "動態記憶體配置", "read": "Ch9.9–9.11 動態配置、GC 概念、常見記憶體 bug", "lab": "Malloc Lab：改成 explicit 或 segregated free list，拉高 util 與 throughput", "build": "把 allocator 的 util / throughput 做成表格，記錄每次改動的效果", "note": "first-fit、best-fit、segregated fit 的取捨，跟 jemalloc / tcmalloc 的設計對照", "algo": "Trees 第 6–10 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 12, "date": "01/18", "title": "I/O 與網路", "read": "Ch10 系統層級 I/O；Ch11 網路程式設計", "lab": "Proxy Lab Part I：循序版 HTTP proxy", "build": "照書做 Tiny Web Server，用 `curl` 和瀏覽器測", "note": "socket → bind → listen → accept 的流程；RIO 套件解決了什麼問題？", "algo": "Trees 第 11–15 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 13, "date": "01/25", "title": "並行程式設計", "read": "Ch12 並行：行程、I/O 多工、執行緒、同步", "lab": "Proxy Lab Part II + III：多執行緒 + LRU 快取", "build": "把 proxy 改成 thread pool，壓測比較 thread-per-request", "note": "thread-per-request、thread pool、event loop（epoll）各適合什麼場景？", "algo": "Tries 全部 3 題 + Heap / Priority Queue 前 2 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 14, "date": "02/01", "title": "緩衝週 + Go 暖身", "read": "回顧 CSAPP 筆記，寫一篇總結；開始 A Tour of Go", "lab": "補完前面沒做完的 Lab", "build": "用 Go 重寫 Tiny Web Server 的核心，為 6.5840 熱身", "note": "CSAPP 總結：哪三個觀念最改變你寫程式的方式？（春節前後，進度可放慢）", "algo": "Heap / Priority Queue 後 5 題；回頭重寫前面卡住的題目", "sysdesign": "", "behavioral": "", "phase": 1, "done": false},
+  {"n": 15, "date": "02/08", "title": "架構取捨與非功能需求", "read": "DDIA 2e Ch1 Trade-Offs in Data Systems Architecture；Ch2 Defining Nonfunctional Requirements", "lab": "Gossip Glomers #1 Echo、#2 Unique ID Generation（熟悉 Maelstrom）", "build": "替自己公司的一個服務寫出 p50 / p99 延遲與負載描述", "note": "為什麼看 p99 而不是平均？用 Ch2 的社群時間軸案例練一次 fan-out 取捨", "algo": "Backtracking 前 5 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false},
+  {"n": 16, "date": "02/15", "title": "資料模型", "read": "Ch3 Data Models and Query Languages", "lab": "6.5840 Lab 1 MapReduce：先讀 MapReduce 論文，寫 worker", "build": "同一份資料分別用關聯式、文件式、圖模型建模，比較查詢寫法", "note": "什麼情況選 document model？event sourcing / CQRS 解決了什麼？", "algo": "Backtracking 後 5 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false},
+  {"n": 17, "date": "02/22", "title": "儲存引擎（上）", "read": "Ch4 Storage and Retrieval：Log-Structured Storage、B-Trees、兩者比較", "lab": "6.5840 Lab 1：完成 coordinator、容錯（worker 掛掉重派）", "build": "迷你 LSM-tree KV：WAL + memtable + SSTable 落盤", "note": "LSM-tree vs B-tree 的寫放大、讀放大、空間放大", "algo": "Graphs 第 1–5 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false},
+  {"n": 18, "date": "03/01", "title": "儲存引擎（下）", "read": "Ch4 後半：分析型儲存、列式儲存、全文與向量索引", "lab": "Gossip Glomers #3 Broadcast（3a–3c）", "build": "幫 LSM-tree 加 compaction 和 Bloom filter，量讀取效能變化", "note": "OLTP 與 OLAP 的儲存為什麼長得不一樣？", "algo": "Graphs 第 6–9 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false},
+  {"n": 19, "date": "03/08", "title": "編碼與演進", "read": "Ch5 Encoding and Evolution", "lab": "6.5840 Lab 2 Key/Value server（線性一致的單機 KV、處理掉包）", "build": "同一份資料用 JSON 與 Protobuf 編碼，比大小與速度；試一次 schema 演進", "note": "向前相容 vs 向後相容；durable execution 是什麼？", "algo": "Graphs 第 10–13 題", "sysdesign": "", "behavioral": "", "phase": 2, "done": false},
+  {"n": 20, "date": "03/15", "title": "複製", "read": "Ch6 Replication", "lab": "Gossip Glomers #3 Broadcast（3d–3e，效率與網路分割）", "build": "幫迷你 KV 加上 leader-follower 非同步複製", "note": "replication lag 會造成哪些異常？read-your-writes 怎麼做？", "algo": "Advanced Graphs 全部 6 題", "sysdesign": "分散式 Key-Value Store（複製、quorum 讀寫），45 分鐘出聲練", "behavioral": "", "phase": 2, "done": false},
+  {"n": 21, "date": "03/22", "title": "分片", "read": "Ch7 Sharding", "lab": "Gossip Glomers #4 Grow-Only Counter、#5 Kafka-Style Log", "build": "實作 consistent hashing ring，模擬加減節點時的資料搬移量", "note": "key range vs hash 分片；hot spot 怎麼緩解？", "algo": "1-D DP 前 6 題", "sysdesign": "短網址服務（ID 生成、依 key 分片、熱點）", "behavioral": "", "phase": 2, "done": false},
+  {"n": 22, "date": "03/29", "title": "交易（上）", "read": "Ch8 Transactions：ACID、弱隔離等級、snapshot isolation", "lab": "Gossip Glomers #6 Totally-Available Transactions", "build": "在迷你 KV 上實作 MVCC 版 snapshot isolation", "note": "write skew 的例子，以及哪種隔離等級能防住它", "algo": "1-D DP 後 6 題", "sysdesign": "秒殺 / 訂票下單（防超賣、隔離等級）", "behavioral": "", "phase": 2, "done": false},
+  {"n": 23, "date": "04/05", "title": "交易（下）", "read": "Ch8 後半：serializability（serial execution、2PL、SSI）、分散式交易", "lab": "讀 Raft 論文（extended version）前半，準備 Lab 3", "build": "寫一個 2PC 模擬器，故意讓 coordinator 在不同時間點掛掉", "note": "2PC 為什麼會卡住？跟 consensus 差在哪？", "algo": "2-D DP 前 6 題", "sysdesign": "支付系統（冪等、2PC vs saga）", "behavioral": "", "phase": 2, "done": false},
+  {"n": 24, "date": "04/12", "title": "分散式系統的麻煩", "read": "Ch9 The Trouble with Distributed Systems", "lab": "6.5840 Lab 3A Raft leader election", "build": "（本週以 Lab 為主）", "note": "unreliable network、unreliable clock、process pause 各舉一個真實事故", "algo": "2-D DP 後 5 題", "sysdesign": "分散式限流器 Rate Limiter（計數同步、時鐘誤差）", "behavioral": "學 STAR 架構，寫故事 1「衝突」（Have Backbone; Disagree and Commit / Earn Trust）", "phase": 2, "done": false},
+  {"n": 25, "date": "04/19", "title": "一致性與共識（上）", "read": "Ch10 Consistency and Consensus：線性一致性、ID 生成與邏輯時鐘", "lab": "6.5840 Lab 3B Raft log replication", "build": "（本週以 Lab 為主）", "note": "linearizability vs serializability；Lamport clock 能保證什麼、不能保證什麼", "algo": "Greedy 前 4 題", "sysdesign": "分散式 ID 生成器 + 分散式鎖（fencing token）", "behavioral": "故事 2「主導負責」（Ownership）", "phase": 2, "done": false},
+  {"n": 26, "date": "04/26", "title": "一致性與共識（下）", "read": "Ch10 共識一節", "lab": "6.5840 Lab 3C persistence", "build": "（本週以 Lab 為主）", "note": "用 Raft 的角度解釋 FLP、quorum 和 fencing token", "algo": "Greedy 後 4 題", "sysdesign": "設定中心 / 服務發現（etcd、ZooKeeper 類）", "behavioral": "故事 3「失敗與學到什麼」（Learn and Be Curious / Earn Trust）", "phase": 2, "done": false},
+  {"n": 27, "date": "05/03", "title": "Raft 收尾", "read": "回顧 Ch9–10 筆記（本週不讀新章）", "lab": "6.5840 Lab 3D log compaction / snapshot", "build": "把 Raft 的 debug log 做成可視化（依 term、server 上色）", "note": "Raft 實作踩過的三個坑，以及怎麼抓到的", "algo": "Intervals 全部 6 題", "sysdesign": "聊天系統（訊息順序、離線送達、在線狀態）", "behavioral": "故事 4「模糊情境下做決定」（Bias for Action / Are Right, A Lot）", "phase": 2, "done": false},
+  {"n": 28, "date": "05/10", "title": "批次處理", "read": "Ch11 Batch Processing", "lab": "6.5840 Lab 4A KV Raft：在 Raft 上做 KV 服務", "build": "對照自己 Lab 1 的 MapReduce，列出跟 Spark 的差異", "note": "為什麼 MapReduce 讓位給 dataflow 引擎？", "algo": "Math & Geometry 前 4 題 + 1 場 45 分鐘計時 mock（演算法）", "sysdesign": "網頁爬蟲 + 批次建索引", "behavioral": "故事 5「做出影響」（Deliver Results）、故事 6「為使用者著想」（Customer Obsession）", "phase": 2, "done": false},
+  {"n": 29, "date": "05/17", "title": "串流處理", "read": "Ch12 Stream Processing", "lab": "6.5840 Lab 4B+C：snapshot 與重複請求處理", "build": "用 Go 寫一個小型 stream processor：讀 log、做 tumbling window 計數", "note": "exactly-once 實際上是怎麼做到的？", "algo": "Math & Geometry 後 4 題 + 1 場 45 分鐘計時 mock", "sysdesign": "分散式訊息佇列（Kafka 類），45 分鐘計時 mock", "behavioral": "故事 7「深挖技術問題」（Dive Deep），整理故事 × Leadership Principles 對照表", "phase": 2, "done": false},
+  {"n": 30, "date": "05/24", "title": "收尾與總結", "read": "Ch13 A Philosophy of Streaming Systems；Ch14 Doing the Right Thing", "lab": "可選：6.5840 Lab 5 Sharded KV", "build": "把 LSM KV、Raft、proxy 整理成 GitHub 作品集，各寫 README", "note": "全書總結 + 拿一題系統設計題（例如設計 Twitter timeline）用學到的東西完整回答一次", "algo": "總複習：2 場 45 分鐘計時 mock（演算法 + 系統設計「News Feed / Twitter timeline」），重寫錯題清單", "sysdesign": "", "behavioral": "每個故事練到 2 分鐘內講完，做一次完整 behavioral mock", "phase": 2, "done": false}
 ];
+
+// 每週技術精讀：新增一筆就 push 一個物件進來，用 week 掛到對應的週卡片（順序不拘，頁面依 date 由新到舊排）。
+// 欄位：date "YYYY-MM-DD", week 數字, type, title, source(可選), url, time, why, focus[], exercise,
+//       extra { title, url, note }(可選), twoWeek true/false（true 時下一週卡片也會顯示「續讀」）
+const READINGS = [
+  {
+    "date": "2026-10-30",
+    "week": 1,
+    "type": "工程部落格",
+    "title": "Extra, Extra - Read All About It: Nearly All Binary Searches and Mergesorts are Broken",
+    "source": "Joshua Bloch，Google Research Blog（2006）",
+    "url": "https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/",
+    "time": "約 15 分鐘",
+    "why": "Java Arrays 二分搜尋的整數溢位 bug 藏了約 9 年；陣列約 2^30 元素時 low + high 溢位成負數，正是 CSAPP 2.3 的補數溢位。",
+    "focus": [
+      "用補數加法溢位解釋 `(low + high) / 2` 為什麼壞掉",
+      "`low + (high - low) / 2`、`>>> 1`、轉 unsigned 三種修法各自為什麼可行",
+      "2008 更新：C 的有號溢位是 undefined behavior，為什麼 Java 的修法搬到 C/C++ 不保證成立"
+    ],
+    "exercise": "寫一個 C 程式：`int low = 1 << 30, high = (1 << 30) + 10;` 印出 `(low + high) / 2` 和 `low + (high - low) / 2`，再用 `-fsanitize=undefined` 編譯，看會不會抓到溢位。",
+    "extra": {
+      "title": "Go 原始碼：math/bits/bits.go",
+      "url": "https://github.com/golang/go/blob/master/src/math/bits/bits.go",
+      "note": "約 30 分鐘，依序看 `Add64` → `OnesCount64` → `LeadingZeros64`，跟 Data Lab 的思路很像。"
+    },
+    "twoWeek": false
+  }
+];
+
 const LINKS = [
   {
     "title": "CS:APP3e 官方 Lab Assignments（Self-Study Handouts）",
@@ -223,148 +358,190 @@ const LINKS = [
     "href": "https://www.amazon.jobs/content/en/our-workplace/leadership-principles"
   }
 ];
-// 每週技術精讀：新的一筆加在陣列任何位置都可以，頁面會依 date 由新到舊排。
-// 欄位：date, week, type, title, source(可選), url, time, why, focus[], exercise, extra{title,url,note}(可選), twoWeek
-const READINGS = [
-  {
-    "date": "2026-10-30",
-    "week": 1,
-    "type": "工程部落格",
-    "title": "Extra, Extra - Read All About It: Nearly All Binary Searches and Mergesorts are Broken",
-    "source": "Joshua Bloch，Google Research Blog（2006）",
-    "url": "https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/",
-    "time": "約 15 分鐘",
-    "why": "Java Arrays 二分搜尋的整數溢位 bug 藏了約 9 年；陣列約 2^30 元素時 low + high 溢位成負數，正是 CSAPP 2.3 的補數溢位。",
-    "focus": [
-      "用補數加法溢位解釋 `(low + high) / 2` 為什麼壞掉",
-      "`low + (high - low) / 2`、`>>> 1`、轉 unsigned 三種修法各自為什麼可行",
-      "2008 更新：C 的有號溢位是 undefined behavior，為什麼 Java 的修法搬到 C/C++ 不保證成立"
-    ],
-    "exercise": "寫一個 C 程式：`int low = 1 << 30, high = (1 << 30) + 10;` 印出 `(low + high) / 2` 和 `low + (high - low) / 2`，再用 `-fsanitize=undefined` 編譯，看會不會抓到溢位。",
-    "extra": {
-      "title": "Go 原始碼：math/bits/bits.go",
-      "url": "https://github.com/golang/go/blob/master/src/math/bits/bits.go",
-      "note": "約 30 分鐘，依序看 `Add64` → `OnesCount64` → `LeadingZeros64`，跟 Data Lab 的思路很像。"
-    },
-    "twoWeek": false
-  }
-];
+
 // 密碼閘門：只是擋一般瀏覽，不是真正的安全機制（資料本來就在公開 repo 裡）。只存 SHA-256。
 const PW_HASH = "165940940a02a187e4463ff467090930038c5af8fc26107bf301e714f599a1da";
 const UNLOCK_KEY = "csapp-ddia-unlock-v1";
+
+// ===== 工具 =====
 const START = new Date(2026, 10, 2); // W1 週一 2026-11-02（本機時區）
+const DAY = 86400000;
 const KEY = "csapp-ddia-progress-v1";
 const local = JSON.parse(localStorage.getItem(KEY) || "{}");
-const DAY = 86400000;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const md = s => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>");
 const weekStart = w => new Date(START.getTime() + (w.n - 1) * 7 * DAY);
 const fmt = d => `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}`;
+const range = w => { const s = weekStart(w), e = new Date(s.getTime() + 6 * DAY); return `${fmt(s)} – ${fmt(e).slice(5)}`; };
 const isDone = w => (w.n in local) ? local[w.n] : w.done;
-const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const md = s => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>");
-const prepHtml = s => s.split("｜").map(x => `<div>${md(x)}</div>`).join("");
 const today = new Date(); today.setHours(0,0,0,0);
 const idx = Math.floor((today - START) / (7 * DAY));
-const cur = WEEKS.find(w => w.n === idx + 1);
+const cur = WEEKS.find(w => w.n === idx + 1) || null;
+const heroWeek = cur || (idx < 0 ? WEEKS[0] : WEEKS[WEEKS.length - 1]);
 
-function render() {
-  for (const p of [1, 2]) {
-    const box = document.getElementById("phase" + p);
-    box.innerHTML = "";
-    for (const w of WEEKS.filter(w => w.phase === p)) {
-      const d = isDone(w), s = weekStart(w), e = new Date(s.getTime() + 6 * DAY);
-      const el = document.createElement("details");
-      el.className = "week" + (d ? " done" : "") + (cur && cur.n === w.n ? " current" : "");
-      el.id = "w" + w.n;
-      el.innerHTML = `<summary><input type="checkbox" ${d ? "checked" : ""} aria-label="W${w.n} 完成">
-        <span class="wn">W${w.n}</span><span class="wt">${esc(w.title)}</span>
-        ${cur && cur.n === w.n ? '<span class="tag">本週</span>' : ""}
-        ${(w.n in local && local[w.n] !== w.done) ? '<span class="local">本機</span>' : ""}
-        <span class="wd">${fmt(s)} – ${fmt(e).slice(5)}</span></summary>
-        <dl><dt>閱讀</dt><dd>${md(w.read)}</dd><dt>Lab</dt><dd>${md(w.lab)}</dd>
-        <dt>小專案</dt><dd>${md(w.build)}</dd><dt>筆記題目</dt><dd>${md(w.note)}</dd><dt>面試準備</dt><dd class="prep">${prepHtml(w.prep)}</dd></dl>`;
-      const cb = el.querySelector("input");
-      cb.addEventListener("click", ev => ev.stopPropagation());
-      cb.addEventListener("change", () => {
-        if (cb.checked === w.done) delete local[w.n]; else local[w.n] = cb.checked;
-        localStorage.setItem(KEY, JSON.stringify(local));
-        const open = [...document.querySelectorAll("details[open]")].map(x => x.id);
-        render(); open.forEach(id => document.getElementById(id).open = true);
-      });
-      box.appendChild(el);
-    }
+const readingsFor = w => [
+  ...READINGS.filter(r => r.week === w.n).map(r => ({ r, cont: false })),
+  ...READINGS.filter(r => r.twoWeek && r.week + 1 === w.n).map(r => ({ r, cont: true })),
+].sort((a, b) => b.r.date.localeCompare(a.r.date));
+
+// 類型：順序就是卡片裡的顯示順序
+const TYPES = [
+  { k: "read",    cls: "t-read",    icon: "📖", name: "閱讀",     grp: "主線", get: w => w.read },
+  { k: "lab",     cls: "t-lab",     icon: "🧪", name: "Lab",      grp: "主線", get: w => w.lab },
+  { k: "build",   cls: "t-build",   icon: "🛠", name: "小專案",   grp: "主線", get: w => w.build },
+  { k: "note",    cls: "t-note",    icon: "📝", name: "筆記題目", grp: "主線", get: w => w.note },
+  { k: "reading", cls: "t-reading", icon: "📰", name: "本週精讀", grp: "精讀", get: w => readingsFor(w).length ? readingsFor(w) : "" },
+  { k: "algo",    cls: "t-algo",    icon: "🧩", name: "刷題",     grp: "面試準備", get: w => w.algo },
+  { k: "sys",     cls: "t-sys",     icon: "🏗", name: "系統設計", grp: "面試準備", get: w => w.sysdesign },
+  { k: "beh",     cls: "t-beh",     icon: "🗣", name: "行為面試", grp: "面試準備", get: w => w.behavioral },
+];
+const CHIP_TYPES = ["reading", "algo", "sys", "beh"];
+let filter = "all";
+
+// ===== 區塊 =====
+function readingHtml({ r, cont }) {
+  return `<div class="rd">
+    <div class="rd-title"><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a></div>
+    <div class="rd-meta">${[r.source, r.type, r.time].filter(Boolean).map(esc).join(" · ")}${r.twoWeek ? ' <span class="badge b-two">兩週份</span>' : ""}${cont ? ` <span class="badge b-local">續讀 W${r.week}</span>` : ""}</div>
+    <dl class="kv">
+      <dt>為什麼</dt><dd>${md(r.why)}</dd>
+      <dt>重點</dt><dd><ol>${r.focus.map(f => `<li>${md(f)}</li>`).join("")}</ol></dd>
+      <dt>動手</dt><dd>${md(r.exercise)}</dd>
+      ${r.extra ? `<dt>選讀</dt><dd><a href="${esc(r.extra.url)}" target="_blank" rel="noopener">${esc(r.extra.title)}</a><br>${md(r.extra.note)}</dd>` : ""}
+    </dl></div>`;
+}
+function blockHtml(t, w) {
+  const v = t.get(w);
+  if (!v || (Array.isArray(v) && !v.length)) return "";
+  const twoWeek = t.k === "reading" && v.some(x => x.r.twoWeek && !x.cont);
+  const inner = t.k === "reading" ? v.map(readingHtml).join("") : `<div class="tx">${md(v)}</div>`;
+  return `<div class="blk ${t.cls}"><div class="lb">${t.icon} ${t.name}${twoWeek ? '<span class="badge b-two">兩週份</span>' : ""}</div>${inner}</div>`;
+}
+function bodyHtml(w) {
+  let out = "", grp = "";
+  for (const t of TYPES) {
+    const b = blockHtml(t, w);
+    if (!b) continue;
+    if (t.grp !== grp) { out += `<div class="grp">${t.grp}</div>`; grp = t.grp; }
+    out += b;
   }
+  return out;
+}
+function chipsHtml(w) {
+  return TYPES.filter(t => CHIP_TYPES.includes(t.k) && blockHtml(t, w))
+    .map(t => `<span class="tchip ${t.cls}">${t.icon} ${t.name}</span>`).join("");
+}
+function checkbox(w) {
+  return `<input class="cb" type="checkbox" data-n="${w.n}" ${isDone(w) ? "checked" : ""} aria-label="W${w.n} 完成">`;
+}
+const localBadge = w => (w.n in local && local[w.n] !== w.done) ? '<span class="badge b-local">本機</span>' : "";
+
+// ===== 畫面 =====
+function renderProgress() {
   const set = (id, list) => {
     const n = list.filter(isDone).length, pct = Math.round(n / list.length * 100);
-    document.getElementById(id + "Txt").textContent = `${n} / ${list.length} 週 · ${pct}%`;
-    document.getElementById(id + "Bar").style.width = pct + "%";
+    $(id + "Txt").textContent = `${n}/${list.length} 週 · ${pct}%`;
+    $(id + "Bar").style.width = pct + "%";
   };
   set("all", WEEKS); set("p1", WEEKS.filter(w => w.phase === 1)); set("p2", WEEKS.filter(w => w.phase === 2));
 }
-
-function renderReadings() {
-  const curWeek = cur ? cur.n : (idx < 0 ? 1 : null);
-  const list = [...READINGS].sort((a, b) => b.date.localeCompare(a.date));
-  const highlighted = list.find(r => r.week === curWeek);
-  document.getElementById("readings").innerHTML = list.map(r => `
-    <article class="rd${r === highlighted ? " current" : ""}">
-      <div class="meta"><span>${esc(r.date.replace(/-/g, "/"))}</span><span class="chip">W${r.week}</span><span class="chip">${esc(r.type)}</span><span>${esc(r.time)}</span>${r.twoWeek ? '<span class="chip">兩週份</span>' : ""}${r === highlighted ? '<span class="tag">本週</span>' : ""}</div>
-      <h3><a href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a></h3>
-      ${r.source ? `<div class="muted">${esc(r.source)}</div>` : ""}
-      <div class="lbl">為什麼值得讀</div><p>${md(r.why)}</p>
-      <div class="lbl">閱讀重點</div><ol>${r.focus.map(f => `<li>${md(f)}</li>`).join("")}</ol>
-      <div class="lbl">讀完動手</div><p>${md(r.exercise)}</p>
-      ${r.extra ? `<div class="extra"><div class="lbl" style="margin-top:0">選讀</div><a href="${r.extra.url}" target="_blank" rel="noopener">${esc(r.extra.title)}</a><p>${md(r.extra.note)}</p></div>` : ""}
-    </article>`).join("");
+function renderHero() {
+  const w = heroWeek;
+  let kicker = "本週", sub = range(w);
+  if (idx < 0) { kicker = "即將開始"; sub = `${range(w)} · 還有 ${Math.round((START - today) / DAY)} 天`; }
+  else if (!cur) { kicker = "計畫已結束"; }
+  $("hero").innerHTML = `<div class="hero-hd">${checkbox(w)}<span class="kicker">${kicker}</span>
+    <span class="hero-title">W${w.n} · ${esc(w.title)}</span>${localBadge(w)}
+    <div class="hero-sub">${sub}</div></div><div class="body">${bodyHtml(w)}</div>`;
 }
+function renderFilters() {
+  const opts = [{ k: "all", label: "全部" }, ...TYPES.map(t => ({ k: t.k, label: `${t.icon} ${t.name}` }))];
+  $("filters").innerHTML = opts.map(o => `<button class="fchip" data-f="${o.k}" aria-pressed="${filter === o.k}">${o.label}</button>`).join("");
+}
+function renderList() {
+  const open = new Set([...document.querySelectorAll("details.week[open]")].map(x => x.id));
+  let html = "";
+  for (const [p, name, dates] of [[1, "第一階段 · CSAPP + CMU Labs", "2026/11/02 – 2027/02/07"], [2, "第二階段 · DDIA 2e + 6.5840", "2027/02/08 – 2027/05/30"]]) {
+    const ws = WEEKS.filter(w => w.phase === p);
+    const done = ws.filter(isDone).length;
+    let rows = "";
+    if (filter === "all") {
+      rows = ws.map(w => {
+        const isCur = cur && cur.n === w.n;
+        return `<details class="week${isDone(w) ? " done" : ""}${isCur ? " current" : ""}" id="w${w.n}"${open.has("w" + w.n) ? " open" : ""}>
+          <summary>${checkbox(w)}<span class="wn">W${w.n}</span>
+            <span class="wt"><span>${esc(w.title)}</span> ${isCur ? '<span class="badge b-now">本週</span>' : ""}${localBadge(w)}<span class="wd">${range(w)}</span></span>
+            <span class="chips">${chipsHtml(w)}</span></summary>
+          <div class="body">${bodyHtml(w)}</div></details>`;
+      }).join("");
+    } else {
+      const t = TYPES.find(t => t.k === filter);
+      rows = ws.map(w => {
+        const b = blockHtml(t, w);
+        return b ? `<div class="fitem${cur && cur.n === w.n ? " current" : ""}"><div class="fhd"><span class="wn">W${w.n}</span><b>${esc(w.title)}</b><span class="muted">${range(w)}</span></div>${b}</div>` : "";
+      }).join("");
+      if (!rows) continue;
+    }
+    html += `<div class="phase"><h2 style="margin-top:18px">${name} <small>${dates} · ${done}/${ws.length}</small></h2>${rows}</div>`;
+  }
+  $("list").innerHTML = html;
+}
+function renderReadIdx() {
+  const list = [...READINGS].sort((a, b) => b.date.localeCompare(a.date));
+  $("readIdx").innerHTML = list.map(r => `<li><span class="muted">${esc(r.date.replace(/-/g, "/"))}</span>
+    <a href="#w${r.week}" data-jump="${r.week}" class="wn" style="text-decoration:none">W${r.week}</a>
+    <a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>${r.twoWeek ? ' <span class="badge b-two">兩週份</span>' : ""}</li>`).join("");
+}
+function renderAll() { renderProgress(); renderHero(); renderFilters(); renderList(); }
 
 function init() {
-const now = document.getElementById("nowPanel");
-if (idx < 0) {
-  const days = Math.round((START - today) / DAY);
-  now.innerHTML = `<div class="big">還沒開始</div><div>距離 W1「${esc(WEEKS[0].title)}」（${fmt(START)} 週一）還有 ${days} 天。</div>`;
-} else if (cur) {
-  now.innerHTML = `<div class="big">本週：W${cur.n} · ${esc(cur.title)}</div><div class="muted">${fmt(weekStart(cur))} 起</div><div>Lab：${md(cur.lab)}</div>`;
-} else {
-  now.innerHTML = `<div class="big">30 週排程已結束 🎉</div><div>看看還有哪幾週沒勾完。</div>`;
+  renderAll();
+  renderReadIdx();
+  $("links").innerHTML = LINKS.map(l => `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.title)}<small>${esc(l.site)}</small></a>`).join("");
+  document.addEventListener("click", e => {
+    if (e.target.classList && e.target.classList.contains("cb")) e.stopPropagation();
+  }, true);
+  document.addEventListener("change", e => {
+    const cb = e.target.closest && e.target.closest(".cb");
+    if (!cb) return;
+    const w = WEEKS.find(x => x.n === +cb.dataset.n);
+    if (cb.checked === w.done) delete local[w.n]; else local[w.n] = cb.checked;
+    localStorage.setItem(KEY, JSON.stringify(local));
+    renderAll();
+  });
+  $("filters").addEventListener("click", e => {
+    const b = e.target.closest(".fchip"); if (!b) return;
+    filter = b.dataset.f; renderFilters(); renderList();
+  });
+  $("readIdx").addEventListener("click", e => {
+    const a = e.target.closest("[data-jump]"); if (!a) return;
+    e.preventDefault();
+    if (filter !== "all") { filter = "all"; renderFilters(); renderList(); }
+    const d = $("w" + a.dataset.jump); d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  $("resetLocal").onclick = () => {
+    if (confirm("清除這台電腦上的本機勾選，回到檔案裡的正式進度？")) { localStorage.removeItem(KEY); for (const k in local) delete local[k]; renderAll(); }
+  };
+  $("lockBtn").onclick = () => { localStorage.removeItem(UNLOCK_KEY); location.reload(); };
 }
 
-document.getElementById("links").innerHTML = LINKS.map(l =>
-  `<a href="${l.href}" target="_blank" rel="noopener">${esc(l.title)}<small>${esc(l.site)}</small></a>`).join("");
-document.getElementById("openCur").onclick = () => {
-  const t = document.getElementById("w" + (cur ? cur.n : 1)); t.open = true; t.scrollIntoView({behavior: "smooth", block: "center"});
-};
-document.getElementById("toggleAll").onclick = () => {
-  const all = [...document.querySelectorAll("details.week")], anyClosed = all.some(x => !x.open);
-  all.forEach(x => x.open = anyClosed);
-};
-document.getElementById("resetLocal").onclick = () => {
-  if (confirm("清除這台電腦上的本機勾選，回到檔案裡的正式進度？")) { localStorage.removeItem(KEY); for (const k in local) delete local[k]; render(); }
-};
-document.getElementById("lockBtn").onclick = () => { localStorage.removeItem(UNLOCK_KEY); location.reload(); };
-render();
-renderReadings();
-if (cur) document.getElementById("w" + cur.n).open = true; else if (idx < 0) document.getElementById("w1").open = true;
-}
-
+// ===== 密碼閘門 =====
 async function sha256(t) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t));
   return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
 }
-function unlock() {
-  document.getElementById("gate").hidden = true;
-  document.getElementById("app").hidden = false;
-  init();
-}
+function unlock() { $("gate").hidden = true; $("app").hidden = false; init(); }
 (function gate() {
   if (localStorage.getItem(UNLOCK_KEY) === PW_HASH) return unlock();
-  const g = document.getElementById("gate"), pw = document.getElementById("pw"), err = document.getElementById("gerr");
-  g.hidden = false; pw.focus();
+  const pw = $("pw"), err = $("gerr");
+  $("gate").hidden = false; pw.focus();
   const tryPw = async () => {
     if (!window.crypto || !crypto.subtle) { err.textContent = "這個瀏覽器不支援密碼檢查，請改用 https 網址或新版瀏覽器開啟。"; return; }
     if (await sha256(pw.value.trim()) === PW_HASH) { localStorage.setItem(UNLOCK_KEY, PW_HASH); unlock(); }
     else { err.textContent = "密碼不對，再試一次。"; pw.select(); }
   };
-  document.getElementById("pwBtn").onclick = tryPw;
+  $("pwBtn").onclick = tryPw;
   pw.addEventListener("keydown", e => { if (e.key === "Enter") tryPw(); });
 })();
 </script>
