@@ -39,6 +39,22 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 
 題數依 neetcode.io 上 NeetCode 150 的主題分組（2026/10/30 查）。忙的週先保 Lab，面試題可以順延。
 
+## 每週技術精讀
+
+每週一推一份技術精讀（新的在上面），完整卡片也在 [進度頁](https://penguin-yeh.github.io/csapp-ddia-study/) 的「每週技術精讀」。
+
+### 2026/10/30 · W1 暖身 · 工程部落格 · 約 15 分鐘
+
+**[Extra, Extra - Read All About It: Nearly All Binary Searches and Mergesorts are Broken](https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/)**（Joshua Bloch，Google Research Blog，2006）
+
+- **為什麼值得讀**：Java Arrays 二分搜尋的整數溢位 bug 藏了約 9 年；陣列約 2^30 元素時 low + high 溢位成負數，正是 CSAPP 2.3 的補數溢位。
+- **閱讀重點**
+  1. 用補數加法溢位解釋 `(low + high) / 2` 為什麼壞掉
+  2. `low + (high - low) / 2`、`>>> 1`、轉 unsigned 三種修法各自為什麼可行
+  3. 2008 更新：C 的有號溢位是 undefined behavior，為什麼 Java 的修法搬到 C/C++ 不保證成立
+- **讀完動手**：寫一個 C 程式：`int low = 1 << 30, high = (1 << 30) + 10;` 印出 `(low + high) / 2` 和 `low + (high - low) / 2`，再用 `-fsanitize=undefined` 編譯，看會不會抓到溢位。
+- **選讀**：[Go 原始碼：math/bits/bits.go](https://github.com/golang/go/blob/master/src/math/bits/bits.go)，約 30 分鐘，依序看 `Add64` → `OnesCount64` → `LeadingZeros64`，跟 Data Lab 的思路很像。
+
 ## 進度
 
 ### 第一階段：CSAPP + CMU Labs（2026/11/02–2027/02/07）
@@ -249,7 +265,8 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 
 ```
 .
-├── index.html           # 離線進度頁（瀏覽器直接開）
+├── index.html           # 進度頁（GitHub Pages / 離線都能開）
+├── .nojekyll            # 讓 GitHub Pages 直接提供靜態檔
 ├── csapp-labs/          # CS:APP 官方 Labs（W1–W13）
 │   ├── datalab/         # W1–W2
 │   ├── bomblab/         # W3–W4
@@ -270,4 +287,4 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 
 每完成一週，就把上面對應的 `- [ ]` 改成 `- [x]`，並把 `index.html` 裡 `WEEKS` 資料該週的 `done` 改成 `true`。
 
-**進度頁怎麼開：** `git clone` 這個 repo（或在 GitHub 上 Download ZIP）後，直接用瀏覽器打開 `index.html` 就行，不需要網路或架站。頁面上的勾選只存在本機瀏覽器，正式進度以檔案裡的 `done` 欄位為準。
+**進度頁怎麼開：** 直接開 https://penguin-yeh.github.io/csapp-ddia-study/ （GitHub Pages，輸入密碼解鎖，同一台瀏覽器會記住）。也可以 `git clone` 後用瀏覽器打開 `index.html` 離線看。頁面上的勾選只存在本機瀏覽器，正式進度以檔案裡的 `done` 欄位為準；每週技術精讀寫在 `index.html` 的 `READINGS` 陣列。

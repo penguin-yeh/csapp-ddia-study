@@ -56,10 +56,37 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;bac
 .note{font-size:.85rem;color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:10px 14px;margin:10px 0}
 button{font:inherit;font-size:.85rem;background:transparent;color:var(--accent);border:1px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer}
 .tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+#gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px;z-index:10}
+#gate[hidden]{display:none}
+.gbox{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px 24px;width:100%;max-width:360px;text-align:center}
+.gbox h1{font-size:1.2rem;margin:0 0 6px}
+.gbox input{font:inherit;width:100%;padding:10px 12px;margin:14px 0 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);text-align:center;letter-spacing:.3em}
+.gbox button{width:100%;padding:9px;background:var(--accent);color:#fff;border:none}
+#gerr{color:#dc2626;font-size:.88rem;min-height:1.4em;margin-top:8px}
+.rd{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:10px}
+.rd.current{box-shadow:0 0 0 2px var(--hlb) inset;border-color:var(--hlb)}
+.rd h3{margin:4px 0 2px;font-size:1.05rem;line-height:1.4}
+.rd h3 a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--accent)}
+.rd .meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:.82rem;color:var(--muted)}
+.chip{border:1px solid var(--line);border-radius:99px;padding:0 8px}
+.rd .lbl{font-size:.82rem;color:var(--muted);margin-top:10px}
+.rd ol{margin:4px 0;padding-left:1.3em}
+.rd p{margin:4px 0}
+.rd .extra{border-left:3px solid var(--line);padding-left:10px;margin-top:10px}
+.rd .extra a{color:var(--accent)}
 </style>
 </head>
 <body>
-<main>
+<div id="gate" hidden>
+  <div class="gbox">
+    <h1>🔒 CSAPP × DDIA 學習進度</h1>
+    <div class="muted">請輸入密碼才能查看</div>
+    <input id="pw" type="password" inputmode="numeric" autocomplete="current-password" placeholder="密碼" aria-label="密碼">
+    <button id="pwBtn">解鎖</button>
+    <div id="gerr"></div>
+  </div>
+</div>
+<main id="app" hidden>
 <h1>CSAPP × DDIA 2e 實作學習計畫</h1>
 <p class="sub">30 週、每週 8–10 小時：前 14 週 CSAPP 配 CMU 官方 Labs，後 16 週 DDIA 第二版配 MIT 6.5840 與 Gossip Glomers。</p>
 
@@ -72,6 +99,9 @@ button{font:inherit;font-size:.85rem;background:transparent;color:var(--accent);
   </div>
 </section>
 <section class="panel now" id="nowPanel"></section>
+
+<h2>每週技術精讀</h2>
+<div id="readings"></div>
 
 <h2>面試準備軌道</h2>
 <section class="panel ip">
@@ -92,7 +122,7 @@ button{font:inherit;font-size:.85rem;background:transparent;color:var(--accent);
 </section>
 
 <div class="note">正式進度以這個檔案裡 <code>WEEKS</code> 資料的 <code>done</code> 欄位為準（完成一週就改成 <code>true</code> 並 commit）。在這頁直接勾選只會存在這台電腦瀏覽器的 localStorage，方便自己臨時記錄，標成「本機」的就是還沒寫回檔案的。</div>
-<div class="tools"><button id="openCur">展開本週</button><button id="toggleAll">全部展開 / 收合</button><button id="resetLocal">清除本機勾選</button></div>
+<div class="tools"><button id="openCur">展開本週</button><button id="toggleAll">全部展開 / 收合</button><button id="resetLocal">清除本機勾選</button><button id="lockBtn">重新上鎖</button></div>
 
 <h2>第一階段：CSAPP + CMU Labs</h2>
 <div id="phase1"></div>
@@ -193,6 +223,35 @@ const LINKS = [
     "href": "https://www.amazon.jobs/content/en/our-workplace/leadership-principles"
   }
 ];
+// 每週技術精讀：新的一筆加在陣列任何位置都可以，頁面會依 date 由新到舊排。
+// 欄位：date, week, type, title, source(可選), url, time, why, focus[], exercise, extra{title,url,note}(可選), twoWeek
+const READINGS = [
+  {
+    "date": "2026-10-30",
+    "week": 1,
+    "type": "工程部落格",
+    "title": "Extra, Extra - Read All About It: Nearly All Binary Searches and Mergesorts are Broken",
+    "source": "Joshua Bloch，Google Research Blog（2006）",
+    "url": "https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/",
+    "time": "約 15 分鐘",
+    "why": "Java Arrays 二分搜尋的整數溢位 bug 藏了約 9 年；陣列約 2^30 元素時 low + high 溢位成負數，正是 CSAPP 2.3 的補數溢位。",
+    "focus": [
+      "用補數加法溢位解釋 `(low + high) / 2` 為什麼壞掉",
+      "`low + (high - low) / 2`、`>>> 1`、轉 unsigned 三種修法各自為什麼可行",
+      "2008 更新：C 的有號溢位是 undefined behavior，為什麼 Java 的修法搬到 C/C++ 不保證成立"
+    ],
+    "exercise": "寫一個 C 程式：`int low = 1 << 30, high = (1 << 30) + 10;` 印出 `(low + high) / 2` 和 `low + (high - low) / 2`，再用 `-fsanitize=undefined` 編譯，看會不會抓到溢位。",
+    "extra": {
+      "title": "Go 原始碼：math/bits/bits.go",
+      "url": "https://github.com/golang/go/blob/master/src/math/bits/bits.go",
+      "note": "約 30 分鐘，依序看 `Add64` → `OnesCount64` → `LeadingZeros64`，跟 Data Lab 的思路很像。"
+    },
+    "twoWeek": false
+  }
+];
+// 密碼閘門：只是擋一般瀏覽，不是真正的安全機制（資料本來就在公開 repo 裡）。只存 SHA-256。
+const PW_HASH = "165940940a02a187e4463ff467090930038c5af8fc26107bf301e714f599a1da";
+const UNLOCK_KEY = "csapp-ddia-unlock-v1";
 const START = new Date(2026, 10, 2); // W1 週一 2026-11-02（本機時區）
 const KEY = "csapp-ddia-progress-v1";
 const local = JSON.parse(localStorage.getItem(KEY) || "{}");
@@ -242,6 +301,23 @@ function render() {
   set("all", WEEKS); set("p1", WEEKS.filter(w => w.phase === 1)); set("p2", WEEKS.filter(w => w.phase === 2));
 }
 
+function renderReadings() {
+  const curWeek = cur ? cur.n : (idx < 0 ? 1 : null);
+  const list = [...READINGS].sort((a, b) => b.date.localeCompare(a.date));
+  const highlighted = list.find(r => r.week === curWeek);
+  document.getElementById("readings").innerHTML = list.map(r => `
+    <article class="rd${r === highlighted ? " current" : ""}">
+      <div class="meta"><span>${esc(r.date.replace(/-/g, "/"))}</span><span class="chip">W${r.week}</span><span class="chip">${esc(r.type)}</span><span>${esc(r.time)}</span>${r.twoWeek ? '<span class="chip">兩週份</span>' : ""}${r === highlighted ? '<span class="tag">本週</span>' : ""}</div>
+      <h3><a href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a></h3>
+      ${r.source ? `<div class="muted">${esc(r.source)}</div>` : ""}
+      <div class="lbl">為什麼值得讀</div><p>${md(r.why)}</p>
+      <div class="lbl">閱讀重點</div><ol>${r.focus.map(f => `<li>${md(f)}</li>`).join("")}</ol>
+      <div class="lbl">讀完動手</div><p>${md(r.exercise)}</p>
+      ${r.extra ? `<div class="extra"><div class="lbl" style="margin-top:0">選讀</div><a href="${r.extra.url}" target="_blank" rel="noopener">${esc(r.extra.title)}</a><p>${md(r.extra.note)}</p></div>` : ""}
+    </article>`).join("");
+}
+
+function init() {
 const now = document.getElementById("nowPanel");
 if (idx < 0) {
   const days = Math.round((START - today) / DAY);
@@ -264,8 +340,33 @@ document.getElementById("toggleAll").onclick = () => {
 document.getElementById("resetLocal").onclick = () => {
   if (confirm("清除這台電腦上的本機勾選，回到檔案裡的正式進度？")) { localStorage.removeItem(KEY); for (const k in local) delete local[k]; render(); }
 };
+document.getElementById("lockBtn").onclick = () => { localStorage.removeItem(UNLOCK_KEY); location.reload(); };
 render();
+renderReadings();
 if (cur) document.getElementById("w" + cur.n).open = true; else if (idx < 0) document.getElementById("w1").open = true;
+}
+
+async function sha256(t) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+function unlock() {
+  document.getElementById("gate").hidden = true;
+  document.getElementById("app").hidden = false;
+  init();
+}
+(function gate() {
+  if (localStorage.getItem(UNLOCK_KEY) === PW_HASH) return unlock();
+  const g = document.getElementById("gate"), pw = document.getElementById("pw"), err = document.getElementById("gerr");
+  g.hidden = false; pw.focus();
+  const tryPw = async () => {
+    if (!window.crypto || !crypto.subtle) { err.textContent = "這個瀏覽器不支援密碼檢查，請改用 https 網址或新版瀏覽器開啟。"; return; }
+    if (await sha256(pw.value.trim()) === PW_HASH) { localStorage.setItem(UNLOCK_KEY, PW_HASH); unlock(); }
+    else { err.textContent = "密碼不對，再試一次。"; pw.select(); }
+  };
+  document.getElementById("pwBtn").onclick = tryPw;
+  pw.addEventListener("keydown", e => { if (e.key === "Enter") tryPw(); });
+})();
 </script>
 </body>
 </html>
