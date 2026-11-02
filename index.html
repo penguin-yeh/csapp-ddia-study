@@ -128,6 +128,10 @@ button{font:inherit;cursor:pointer}
 .vd-m{font-size:.82rem;color:var(--muted)}
 .vd-n{font-size:.88rem;color:var(--fg2)}
 .b-opt{border:1px solid var(--muted);color:var(--muted)}
+.lvl{display:inline-block;font-size:.7rem;font-weight:600;line-height:1.55;border-radius:99px;padding:0 7px;margin-right:6px;vertical-align:1px;white-space:nowrap;text-decoration:none}
+.lvl-req{background:color-mix(in srgb,var(--accent) 13%,var(--card));color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.lvl-opt{background:var(--soft);color:var(--muted);border:1px solid var(--line);font-weight:500}
+.core{font-size:.82rem;color:var(--fg2);margin-top:8px}.core .lvl{margin-right:4px}
 .rc+.rc{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
 .rc-t{font-weight:600;line-height:1.5}
 .rc-m{font-size:.82rem;color:var(--muted);margin:2px 0 4px}
@@ -328,7 +332,7 @@ details.about[open]>summary::before{content:"▾ "}
 // 正式進度：完成一週就把該週的 done 改成 true 再 commit。
 // algo / sysdesign / behavioral 為空字串時，該週不顯示那個區塊。
 const WEEKS = [
-  {"n": 1, "date": "11/02", "title": "位元與整數", "read": "CSAPP Ch1 系統漫遊；Ch2.1–2.3 資訊表示、整數", "lab": "Data Lab：整數題（bitXor、isTmax、conditional 等）", "build": "寫一個 `popcount` / `bitcount` 小工具，配單元測試涵蓋邊界值", "note": "用自己的話解釋：為什麼補數讓加減法共用同一套電路？哪些情況會溢位？", "algo": "NeetCode 150 Arrays & Hashing 前 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [{"src": "CMU 15-213 F15", "title": "Lecture 01: Course Overview", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d8c83d3a-8074-4afe-ae3b-693e2250999a", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=ScMxnXq6fbI", "min": 75}, {"src": "CMU 15-213 F15", "title": "Lecture 02: Bits, Bytes, and Integers", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6ca8cdb4-6961-42d9-8fac-299e53759a17", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=Z4SMP451N-g", "min": 71}, {"src": "CMU 15-213 F15", "title": "Lecture 03: Bits, Bytes, and Integers (cont.)", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=526e6341-aa53-4107-8fa1-d13c0e92342e", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=rFkQyULQQOg", "min": 76}, {"src": "CMU 15-213 F15", "title": "Recitation 3: Datalab and Data Representations", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=392a2070-4d49-443c-90b8-4fbbc9f666c6", "opt": false, "note": "Data Lab 開工前看", "min": 50}], "novideo": "", "goal": "看懂位元、位元組與整數在機器裡怎麼表示；能用位元運算解 Data Lab 的整數題。\n建立每週節奏：影片 → 讀書做練習題 → Lab → 小專案 → 筆記。", "readx": ["Ch1 A Tour of Computer Systems（全章速讀）", "§2.1 Information Storage：十六進位、位元組順序、位元運算、shift", "§2.2 Integer Representations：unsigned、two's complement、轉型與 sign extension", "§2.3 Integer Arithmetic：加法溢位、乘以常數、除以 2 的冪", "練習：§2.1–2.3 內所有 Practice Problems（解答在章末），每題先自己算再對答案"], "labx": ["下載 datalab-handout.tar，`make`，讀 `bits.c` 開頭的 coding rules", "整數題：bitXor、tmin、isTmax、allOddBits、negate、isAsciiDigit、conditional、isLessOrEqual、logicalNeg、howManyBits（題名依 handout 為準）", "每題做完跑 `./btest -f <題名>`；隨時用 `./dlc bits.c` 檢查是否違規、`./dlc -e bits.c` 看運算子數"], "spec": {"goal": "用 C 寫一個 popcount 工具，比較三種演算法並用測試鎖住邊界值。", "req": ["實作 `popcount_naive`（逐位元）、`popcount_kernighan`（`x &= x-1`）、`popcount_swar`（分組相加，不用迴圈）", "CLI 讀十進位或 0x 十六進位的 32-bit unsigned，印出三種結果", "`make test` 跑單元測試；`make bench` 對 10^7 個隨機數計時"], "iface": "$ ./popcount 0xF0F0\n8 8 8\n$ ./popcount 4294967295\n32 32 32\n\nunsigned popcount_naive(uint32_t x);\nunsigned popcount_kernighan(uint32_t x);\nunsigned popcount_swar(uint32_t x);", "accept": ["測試涵蓋 0、1、0x80000000、0xFFFFFFFF、0x55555555（=16）、0xAAAAAAAA（=16）", "對 10^6 個隨機數，三種實作結果與 `__builtin_popcount` 完全一致", "`gcc -Wall -Wextra -O2` 零警告", "bench 輸出三種實作的 ns/op"], "bonus": ["加 64-bit 版", "用 `objdump -d` 看 `__builtin_popcount` 在 `-mpopcnt` 下是否變成單一指令"], "time": "2 小時", "dir": "csapp-labs/datalab/popcount/"}, "recs": [{"kind": "論文", "title": "The UNIX Time-Sharing System", "by": "Dennis M. Ritchie, Ken Thompson（CACM）", "year": 1974, "url": "https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf", "why": "Unix 的原始論文：檔案、行程、shell、pipe 的設計一次說清楚，CSAPP 後半講的東西幾乎都從這裡長出來。", "time": "約 60 分鐘"}, {"kind": "部落格", "title": "The LMAX Architecture", "by": "Martin Fowler（martinfowler.com）", "year": 2011, "url": "https://martinfowler.com/articles/lmax.html", "why": "單執行緒每秒處理數百萬筆交易的經典案例，「mechanical sympathy」一詞因此流行：懂硬體才寫得出快的系統。", "time": "約 40 分鐘"}], "budget": ["影片約 4.5 小時", "閱讀約 3 小時", "Lab 3–4 小時", "小專案 2 小時", "筆記約 1 小時", "面試準備 3–4 小時"], "dl": {"lab": "Data Lab", "links": [{"t": "datalab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/datalab-handout.tar"}, {"t": "datalab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/datalab.pdf"}], "same": 0}},
+  {"n": 1, "date": "11/02", "title": "位元與整數", "read": "CSAPP Ch1 系統漫遊；Ch2.1–2.3 資訊表示、整數", "lab": "Data Lab：整數題（bitXor、isTmax、conditional 等）", "build": "寫一個 `popcount` / `bitcount` 小工具，配單元測試涵蓋邊界值", "note": "用自己的話解釋：為什麼補數讓加減法共用同一套電路？哪些情況會溢位？", "algo": "NeetCode 150 Arrays & Hashing 前 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [{"src": "CMU 15-213 F15", "title": "Lecture 01: Course Overview", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d8c83d3a-8074-4afe-ae3b-693e2250999a", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=ScMxnXq6fbI", "min": 75}, {"src": "CMU 15-213 F15", "title": "Lecture 02: Bits, Bytes, and Integers", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6ca8cdb4-6961-42d9-8fac-299e53759a17", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=Z4SMP451N-g", "min": 71}, {"src": "CMU 15-213 F15", "title": "Lecture 03: Bits, Bytes, and Integers (cont.)", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=526e6341-aa53-4107-8fa1-d13c0e92342e", "opt": false, "note": "", "yt": "https://www.youtube.com/watch?v=rFkQyULQQOg", "min": 76}, {"src": "CMU 15-213 F15", "title": "Recitation 3: Datalab and Data Representations", "url": "https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=392a2070-4d49-443c-90b8-4fbbc9f666c6", "opt": false, "note": "Data Lab 開工前看", "min": 50}], "novideo": "", "goal": "看懂位元、位元組與整數在機器裡怎麼表示；能用位元運算解 Data Lab 的整數題。\n建立每週節奏：影片 → 讀書做練習題 → Lab → 小專案 → 筆記。", "readx": ["Ch1 A Tour of Computer Systems（全章速讀）", "§2.1 Information Storage：十六進位、位元組順序、位元運算、shift", "§2.2 Integer Representations：unsigned、two's complement、轉型與 sign extension", "§2.3 Integer Arithmetic：加法溢位、乘以常數、除以 2 的冪", "練習：§2.1–2.3 內所有 Practice Problems（解答在章末），每題先自己算再對答案"], "labx": ["下載 datalab-handout.tar，`make`，讀 `bits.c` 開頭的 coding rules", "整數題：bitXor、tmin、isTmax、allOddBits、negate、isAsciiDigit、conditional、isLessOrEqual、logicalNeg、howManyBits（題名依 handout 為準）", "每題做完跑 `./btest -f <題名>`；隨時用 `./dlc bits.c` 檢查是否違規、`./dlc -e bits.c` 看運算子數"], "spec": {"goal": "用 C 寫一個 popcount 工具，比較三種演算法並用測試鎖住邊界值。", "req": ["實作 `popcount_naive`（逐位元）、`popcount_kernighan`（`x &= x-1`）、`popcount_swar`（分組相加，不用迴圈）", "CLI 讀十進位或 0x 十六進位的 32-bit unsigned，印出三種結果", "`make test` 跑單元測試；`make bench` 對 10^7 個隨機數計時"], "iface": "$ ./popcount 0xF0F0\n8 8 8\n$ ./popcount 4294967295\n32 32 32\n\nunsigned popcount_naive(uint32_t x);\nunsigned popcount_kernighan(uint32_t x);\nunsigned popcount_swar(uint32_t x);", "accept": ["測試涵蓋 0、1、0x80000000、0xFFFFFFFF、0x55555555（=16）、0xAAAAAAAA（=16）", "對 10^6 個隨機數，三種實作結果與 `__builtin_popcount` 完全一致", "`gcc -Wall -Wextra -O2` 零警告", "bench 輸出三種實作的 ns/op"], "bonus": ["加 64-bit 版", "用 `objdump -d` 看 `__builtin_popcount` 在 `-mpopcnt` 下是否變成單一指令"], "time": "2 小時", "dir": "csapp-labs/datalab/popcount/"}, "recs": [{"kind": "論文", "title": "The UNIX Time-Sharing System", "by": "Dennis M. Ritchie, Ken Thompson（CACM）", "year": 1974, "url": "https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf", "why": "Unix 的原始論文：檔案、行程、shell、pipe 的設計一次說清楚，CSAPP 後半講的東西幾乎都從這裡長出來。", "time": "約 60 分鐘"}, {"kind": "部落格", "title": "The LMAX Architecture", "by": "Martin Fowler（martinfowler.com）", "year": 2011, "url": "https://martinfowler.com/articles/lmax.html", "why": "單執行緒每秒處理數百萬筆交易的經典案例，「mechanical sympathy」一詞因此流行：懂硬體才寫得出快的系統。", "time": "約 40 分鐘"}], "budget": ["影片約 4.5 小時", "閱讀約 3 小時", "Lab 3–4 小時", "小專案 2 小時", "筆記約 1 小時", "面試準備 3–4 小時"], "dl": {"lab": "Data Lab", "links": [{"t": "datalab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/datalab-handout.tar"}, {"t": "datalab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/datalab.pdf"}], "same": 0}, "lvl": {"video": ["opt", "req", "req", "req"], "read": ["opt", "req", "req", "req", "opt"], "rec": ["opt", "opt"], "reading": {"https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/": "req", "https://github.com/redis/redis/blob/7.2.5/src/bitops.c": "opt"}, "core": "約 5.5 小時：影片 3 小時 17 分 ＋ §2.1–2.3 約 2 小時 ＋ 精讀 15 分；選讀有空再看"}},
   {"n": 2, "date": "11/09", "title": "浮點數", "read": "Ch2.4 浮點數", "lab": "Data Lab：浮點題（floatScale2、floatFloat2Int 等），完成整個 Lab", "build": "CLI：輸入一個 float，印出 sign / exponent / fraction 與實際值", "note": "為什麼 0.1 + 0.2 ≠ 0.3？denormalized 數存在的意義是什麼？", "algo": "NeetCode 150 Bit Manipulation 全部 7 題（提前做，配 Data Lab）", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Data Lab", "links": [{"t": "datalab-handout.tar", "u": "https://csapp.cs.cmu.edu/3e/datalab-handout.tar"}, {"t": "datalab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/datalab.pdf"}], "same": 1}},
   {"n": 3, "date": "11/16", "title": "機器碼：控制流程", "read": "Ch3.1–3.6 組合語言基礎、算術、條件與迴圈", "lab": "Bomb Lab：phase 1–3（學會 `gdb` 和 `objdump -d`）", "build": "同一段 C 用 `-O0` 和 `-O2` 編譯，對照組合語言差異", "note": "畫出 if / switch / loop 對應的組語樣板，`switch` 什麼時候會變成跳轉表？", "algo": "Arrays & Hashing 後 4 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Bomb Lab", "links": [{"t": "bomb.tar", "u": "https://csapp.cs.cmu.edu/3e/bomb.tar"}, {"t": "bomblab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/bomblab.pdf"}], "same": 0}},
   {"n": 4, "date": "11/23", "title": "機器碼：程序與資料", "read": "Ch3.7–3.9 程序呼叫、陣列、結構", "lab": "Bomb Lab：phase 4–6（含 secret phase 可選）", "build": "手畫一次遞迴函式的 stack frame，再用 `gdb` 單步驗證", "note": "callee-saved 與 caller-saved 暫存器的分工，以及為什麼要這樣分", "algo": "Two Pointers 全部 5 題", "sysdesign": "", "behavioral": "", "phase": 1, "done": false, "videos": [], "novideo": "", "goal": "", "readx": [], "labx": [], "spec": null, "recs": [], "budget": [], "dl": {"lab": "Bomb Lab", "links": [{"t": "bomb.tar", "u": "https://csapp.cs.cmu.edu/3e/bomb.tar"}, {"t": "bomblab.pdf（writeup）", "u": "https://csapp.cs.cmu.edu/3e/bomblab.pdf"}], "same": 3}},
@@ -709,11 +713,15 @@ let filter = "all";
 const mins = m => m >= 60 ? `${Math.floor(m / 60)} 小時 ${m % 60} 分` : `${m} 分`;
 const ext = (href, text) => `<a href="${esc(href)}" target="_blank" rel="noopener">${text}</a>`;
 const ul = xs => `<ul class="ls">${xs.map(x => `<li>${md(x)}</li>`).join("")}</ul>`;
+// 必讀 / 選讀 標籤（目前只有 W1 有 lvl 欄位；標籤文字不算進事項 id，勾選紀錄不受影響）
+const LV = { req: "必讀", opt: "選讀" };
+const lvl = k => LV[k] ? `<span class="lvl lvl-${k}">${LV[k]}</span>` : "";
 
 // ===== 區塊 =====
-function readingHtml({ r, cont }) {
+function readingHtml({ r, cont }, w) {
+  const k = ((w && w.lvl && w.lvl.reading) || {})[r.url];
   return `<div class="rd">
-    <div class="rd-title"><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a></div>
+    <div class="rd-title">${lvl(k)}<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a></div>
     <div class="rd-meta">${[r.source, r.type, r.time].filter(Boolean).map(esc).join(" · ")}${r.twoWeek ? ' <span class="badge b-two">兩週份</span>' : ""}${cont ? ` <span class="badge b-local">續讀 W${r.week}</span>` : ""}</div>
     <dl class="kv">
       <dt>為什麼</dt><dd>${md(r.why)}</dd>
@@ -723,20 +731,23 @@ function readingHtml({ r, cont }) {
     </dl></div>`;
 }
 function videoHtml(w) {
-  const rows = w.videos.map(v => `<li class="vd">
-      <div class="vd-t">${ext(v.url, esc(v.title))}${v.opt ? ' <span class="badge b-opt">選看</span>' : ""}</div>
+  const L = (w.lvl && w.lvl.video) || [];
+  const rows = w.videos.map((v, i) => `<li class="vd">
+      <div class="vd-t">${lvl(L[i])}${ext(v.url, esc(v.title))}${v.opt && !L[i] ? ' <span class="badge b-opt">選看</span>' : ""}</div>
       <div class="vd-m">${esc(v.src)} · ${mins(v.min)}${v.yt ? ` · ${ext(v.yt, "YouTube 中英字幕（非官方轉載）")}` : ""}${v.src.startsWith("CMU") ? " · 官方 Panopto" : " · 官方 YouTube"}</div>
       ${v.note ? `<div class="vd-n">${md(v.note)}</div>` : ""}</li>`).join("");
   return (rows ? `<ol class="vds">${rows}</ol>` : "") + (w.novideo ? `<div class="none">${md(w.novideo)}</div>` : "");
 }
 function readHtml(w) {
   if (!w.readx.length) return `<div class="tx">${md(w.read)}</div>`;
-  return `<div class="sum">${md(w.read)}</div>${ul(w.readx)}${w.phase === 2 ? '<div class="fine">DDIA 2e 小節編號尚未查證，這裡只列章名與主題。</div>' : ""}`;
+  const L = (w.lvl && w.lvl.read) || [];
+  return `<div class="sum">${md(w.read)}</div><ul class="ls">${w.readx.map((x, i) => `<li>${lvl(L[i])}${md(x)}</li>`).join("")}</ul>${w.phase === 2 ? '<div class="fine">DDIA 2e 小節編號尚未查證，這裡只列章名與主題。</div>' : ""}`;
 }
 function recHtml(w) {
   if (!w.recs.length) return '<div class="none">之後再選</div>';
-  return w.recs.map(r => `<div class="rc">
-    <div class="rc-t"><span class="kind ${r.kind === "論文" ? "k-p" : "k-b"}">${esc(r.kind)}</span>${ext(r.url, esc(r.title))}</div>
+  const L = (w.lvl && w.lvl.rec) || [];
+  return w.recs.map((r, i) => `<div class="rc">
+    <div class="rc-t">${lvl(L[i])}<span class="kind ${r.kind === "論文" ? "k-p" : "k-b"}">${esc(r.kind)}</span>${ext(r.url, esc(r.title))}</div>
     <div class="rc-m">${esc(r.by)} · ${esc(r.year)} · ${esc(r.time)}</div>
     <div class="rc-w"><b>為什麼是經典</b>　${md(r.why)}</div></div>`).join("");
 }
@@ -767,7 +778,7 @@ function blockHtml(t, w) {
   const twoWeek = t.k === "reading" && v.some(x => x.r.twoWeek && !x.cont);
   let inner;
   switch (t.k) {
-    case "reading": inner = v.map(readingHtml).join(""); break;
+    case "reading": inner = v.map(x => readingHtml(x, w)).join(""); break;
     case "video": inner = videoHtml(w); break;
     case "read": inner = readHtml(w); break;
     case "rec": inner = recHtml(w); break;
@@ -779,7 +790,7 @@ function blockHtml(t, w) {
 }
 function goalHtml(w) {
   return `<div class="goal">${w.goal.split("\n").map(x => `<span class="gl">${md(x)}</span>`).join("")}</div>
-    <div class="budget">${w.budget.map(b => `<span>${esc(b)}</span>`).join("")}</div>`;
+    <div class="budget">${w.budget.map(b => `<span>${esc(b)}</span>`).join("")}</div>${w.lvl && w.lvl.core ? `<div class="core">${lvl("req")}只做必讀${md(w.lvl.core)}</div>` : ""}`;
 }
 const mobile = () => matchMedia("(max-width:640px)").matches;
 const NUMS = "①②③④⑤⑥";
@@ -874,7 +885,8 @@ function decorate(root) {
     const n = card.dataset.wn, seen = {};
     card.querySelectorAll(ITEM_SEL).forEach(el => {
       if (el.parentElement.closest(".it") || el.classList.contains("it")) return;
-      const text = el.textContent.replace(/\s+/g, " ").trim();
+      const c0 = el.cloneNode(true); c0.querySelectorAll(".lvl").forEach(x => x.remove());
+      const text = c0.textContent.replace(/\s+/g, " ").trim();
       const base = `w${n}:${itemScope(el)}:${hashStr(text)}`;
       seen[base] = (seen[base] || 0) + 1;
       const id = seen[base] > 1 ? `${base}:${seen[base]}` : base;
