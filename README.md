@@ -43,6 +43,18 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 
 每週一推一份技術精讀（新的在上面），在 [進度頁](https://penguin-yeh.github.io/csapp-ddia-study/) 會放進對應那一週的卡片裡（📰 本週精讀）。
 
+### 2026/11/02 · W1 位元與整數 · 原始碼 · 約 60 分鐘
+
+**[Redis 原始碼：src/bitops.c（BITCOUNT／BITFIELD 的位元運算）](https://github.com/redis/redis/blob/7.2.5/src/bitops.c)**（Redis 7.2.5）
+
+- **為什麼值得讀**：Redis 的 BITCOUNT 用的就是你這週小專案要寫的 SWAR popcount，BITFIELD 則把補數、sign extension、溢位偵測全部用 C 做了一遍，是 CSAPP 2.1–2.3 在真實後端系統裡的樣子。
+- **閱讀重點**
+  1. `redisPopcount`（L40–99）：查表處理未對齊的開頭，再一次 7 個 uint32 做 SWAR（0x55555555 → 0x33333333 → 0x0F0F0F0F，最後乘 0x01010101 右移 24），想想為什麼乘法能把四個位元組加總
+  2. `getUnsignedBitfield` → `getSignedBitfield`（L229–259）：任意寬度的有號欄位怎麼靠最高位元做 sign extension，註解裡怎麼談 unsigned 轉 signed 的 undefined behavior
+  3. `checkSignedBitfieldOverflow`（L325–380）：先用 unsigned 相加避免 UB，再分 WRAP／SAT／FAIL 三種溢位處理，對照 Data Lab 的 isTmax 和溢位判斷
+- **讀完動手**：把 `redisPopcount` 的 SWAR 寫法搬進你的 popcount 小專案當第四種實作 `popcount_redis`，跟 `__builtin_popcount` 對 10^6 個隨機數比對結果，並在 `make bench` 加上它的 ns/op。
+- **選讀**：[Redis 指令文件：BITFIELD](https://redis.io/docs/latest/commands/bitfield/)，約 10 分鐘，先看 OVERFLOW WRAP／SAT／FAIL 的範例，再回頭讀 `checkSignedBitfieldOverflow` 會更好懂。
+
 ### 2026/10/30 · W1 暖身 · 工程部落格 · 約 15 分鐘
 
 **[Extra, Extra - Read All About It: Nearly All Binary Searches and Mergesorts are Broken](https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/)**（Joshua Bloch，Google Research Blog，2006）
