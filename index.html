@@ -158,20 +158,22 @@ pre{margin:0;font:.82rem/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospa
 .dlt th,.dlt td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
 .dlt th{color:var(--muted);font-weight:500}
 .dlt td:first-child{white-space:nowrap;font-weight:600}
-/* 事項劃掉 */
-.it{cursor:pointer;border-radius:6px;transition:background .12s,color .12s,opacity .12s;-webkit-tap-highlight-color:transparent}
-.it:hover{background:color-mix(in srgb,var(--accent) 7%,transparent)}
-.it:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.it.it-done{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--muted);color:var(--muted);opacity:.6}
-.it.it-done *{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--muted)}
-.it.it-done a{color:var(--muted)}
-.it.it-done::after{content:" ✓";color:var(--ok);font-weight:700;text-decoration:none;display:inline}
+/* 事項勾選：每行最右邊一個圓圈 */
+.it{position:relative;padding-right:42px;min-height:34px}
+li.it{margin-bottom:3px}
 .gl{display:block}
-/* 連結為主的行（影片、推薦、精讀標題、下載）前面多一個小方塊，手機上不用碰到連結也能點 */
-.it.lk:not(.vd):not(.rc)::before,.vd.it>.vd-t::before,.rc.it>.rc-t::before{content:"";display:inline-block;box-sizing:border-box;width:1.05em;height:1.05em;border:1.5px solid var(--muted);border-radius:4px;margin-right:.5em;vertical-align:-.17em;text-decoration:none}
-.it.lk.it-done:not(.vd):not(.rc)::before,.vd.it.it-done>.vd-t::before,.rc.it.it-done>.rc-t::before{background:var(--ok);border-color:var(--ok)}
-.dl-l li.it.lk{list-style:none;margin-left:-1.1em}
-.it.lk.it-done::after,.vd.it.it-done::after,.rc.it.it-done::after{content:none}
+.it .ck{position:absolute;right:0;top:-4px;width:34px;height:34px;padding:0;margin:0;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;text-decoration:none}
+.it .ck::before{content:"";box-sizing:border-box;width:26px;height:26px;border-radius:50%;border:2px solid var(--muted);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;line-height:1;color:#fff;transition:background .12s,border-color .12s}
+.it .ck:hover::before{border-color:var(--ok)}
+.it .ck:focus-visible{outline:none}
+.it .ck:focus-visible::before{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 45%,transparent)}
+.it.it-done>.ck::before{content:"✓";background:var(--ok);border-color:var(--ok)}
+.it.it-done{color:var(--muted)}
+.it.it-done>:not(.ck),.it.it-done>:not(.ck) *{opacity:.85}
+.it.it-done{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--muted)}
+.it.it-done :not(.ck){text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--muted)}
+.it.it-done a{color:var(--muted)}
+.dl-l li.it>.ck{right:-12px}
 .itc{font-size:.75rem;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:0 8px;white-space:nowrap;font-weight:400;font-variant-numeric:tabular-nums}
 .itc.all{color:var(--ok);border-color:var(--ok)}
 .it-hint{font-size:.78rem;color:var(--muted);margin:0 0 6px}
@@ -816,7 +818,7 @@ function renderHero() {
   else if (!cur) { kicker = "計畫已結束"; }
   $("hero").innerHTML = `<div class="hero-hd">${checkbox(w)}<span class="kicker">${kicker}</span>
     <span class="hero-title">W${w.n} · ${esc(w.title)}</span>${localBadge(w)}
-    <div class="hero-sub">${sub}</div></div><div class="body" data-wn="${w.n}"><div class="it-hint">點一下事項就會劃掉代表完成，再點一次取消（只存在這台裝置）</div>${bodyHtml(w, "hero")}</div>`;
+    <div class="hero-sub">${sub}</div></div><div class="body" data-wn="${w.n}"><div class="it-hint">按每行最右邊的圓圈標記完成（這行會劃掉），再按一次取消；只存在這台裝置</div>${bodyHtml(w, "hero")}</div>`;
 }
 function renderFilters() {
   const opts = [{ k: "all", label: "全部" }, ...TYPES.map(t => ({ k: t.k, label: `${t.icon} ${t.name}` }))];
@@ -856,7 +858,7 @@ function renderReadIdx() {
     <a href="#w${r.week}" data-jump="${r.week}" class="wn" style="text-decoration:none">W${r.week}</a>
     <a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>${r.twoWeek ? ' <span class="badge b-two">兩週份</span>' : ""}</li>`).join("");
 }
-// ===== 事項劃掉（每行點一下 = 完成，存在 localStorage）=====
+// ===== 事項勾選（每行最右邊的圓圈 = 完成，存在 localStorage）=====
 const ITEM_KEY = "csapp-ddia-items-v1";
 const items = JSON.parse(localStorage.getItem(ITEM_KEY) || "{}");
 const ITEM_SEL = ".goal .gl, .blk li, .blk .rc, .blk > .tx, .blk > .sum, .blk .rd-title, .blk .dl-same";
@@ -871,15 +873,17 @@ function decorate(root) {
   (root || document).querySelectorAll("[data-wn]").forEach(card => {
     const n = card.dataset.wn, seen = {};
     card.querySelectorAll(ITEM_SEL).forEach(el => {
-      if (el.parentElement.closest(".it")) return;
-      const base = `w${n}:${itemScope(el)}:${hashStr(el.textContent.replace(/\s+/g, " ").trim())}`;
+      if (el.parentElement.closest(".it") || el.classList.contains("it")) return;
+      const text = el.textContent.replace(/\s+/g, " ").trim();
+      const base = `w${n}:${itemScope(el)}:${hashStr(text)}`;
       seen[base] = (seen[base] || 0) + 1;
       const id = seen[base] > 1 ? `${base}:${seen[base]}` : base;
       const on = !!items[id];
-      el.classList.add("it"); el.classList.toggle("it-done", on);
-      const linkLen = [...el.querySelectorAll("a")].reduce((s, a) => s + a.textContent.length, 0);
-      if (el.matches(".vd, .rc") || (linkLen && linkLen >= 0.5 * el.textContent.trim().length)) el.classList.add("lk");
-      el.dataset.it = id; el.setAttribute("role", "checkbox"); el.setAttribute("aria-checked", on); el.tabIndex = 0;
+      el.classList.add("it"); el.classList.toggle("it-done", on); el.dataset.it = id;
+      const ck = document.createElement("button");
+      ck.type = "button"; ck.className = "ck"; ck.setAttribute("role", "checkbox"); ck.setAttribute("aria-checked", on);
+      ck.setAttribute("aria-label", "標記完成：" + text.slice(0, 60));
+      el.appendChild(ck);
     });
   });
   renderItemCounts();
@@ -901,18 +905,17 @@ function toggleItem(el) {
   const id = el.dataset.it, on = !items[id];
   if (on) items[id] = 1; else delete items[id];
   localStorage.setItem(ITEM_KEY, JSON.stringify(items));
-  document.querySelectorAll(".it").forEach(x => { if (x.dataset.it === id) { x.classList.toggle("it-done", on); x.setAttribute("aria-checked", on); } });
+  document.querySelectorAll(".it").forEach(x => {
+    if (x.dataset.it !== id) return;
+    x.classList.toggle("it-done", on);
+    const c = x.querySelector(":scope > .ck"); if (c) c.setAttribute("aria-checked", on);
+  });
   renderItemCounts();
 }
 document.addEventListener("click", e => {
-  const el = e.target.closest && e.target.closest(".it"); if (!el) return;
-  if (e.target.closest("a, button, input, label, summary, select, textarea")) return;
-  const sel = window.getSelection && String(window.getSelection());
-  if (sel && el.contains(window.getSelection().anchorNode)) return;
-  toggleItem(el);
-});
-document.addEventListener("keydown", e => {
-  if ((e.key === " " || e.key === "Enter") && e.target.classList && e.target.classList.contains("it")) { e.preventDefault(); toggleItem(e.target); }
+  const ck = e.target.closest && e.target.closest(".it > .ck"); if (!ck) return;
+  e.preventDefault(); e.stopPropagation();
+  toggleItem(ck.parentElement);
 });
 function renderAll() { renderProgress(); renderHero(); renderFilters(); renderList(); decorate(); }
 
