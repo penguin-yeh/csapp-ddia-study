@@ -872,7 +872,8 @@ function renderReadIdx() {
 // ===== 事項勾選（每行最右邊的圓圈 = 完成，存在 localStorage）=====
 const ITEM_KEY = "csapp-ddia-items-v1";
 const items = JSON.parse(localStorage.getItem(ITEM_KEY) || "{}");
-const ITEM_SEL = ".blk li, .blk .rc, .blk > .tx, .blk > .sum, .blk .rd-title, .blk .dl-same";
+// 區塊標題（.lb 類別名、.sum 總述行、.sub 小標）不是事項，不加圓圈
+const ITEM_SEL = ".blk li, .blk .rc, .blk > .tx, .blk .rd-title, .blk .dl-same";
 function hashStr(s) { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
 function itemScope(el) {
   const b = el.closest(".blk");
