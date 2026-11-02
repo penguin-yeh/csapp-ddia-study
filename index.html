@@ -177,7 +177,6 @@ li.it{margin-bottom:3px}
 .dl-l li.it>.ck{right:-12px}
 .itc{font-size:.75rem;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:0 8px;white-space:nowrap;font-weight:400;font-variant-numeric:tabular-nums}
 .itc.all{color:var(--ok);border-color:var(--ok)}
-.it-hint{font-size:.78rem;color:var(--muted);margin:0 0 6px}
 /* filter view */
 .fitem{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:8px}
 .fitem.current{border-color:var(--hl)}
@@ -819,7 +818,7 @@ function renderHero() {
   else if (!cur) { kicker = "計畫已結束"; }
   $("hero").innerHTML = `<div class="hero-hd">${checkbox(w)}<span class="kicker">${kicker}</span>
     <span class="hero-title">W${w.n} · ${esc(w.title)}</span>${localBadge(w)}
-    <div class="hero-sub">${sub}</div></div><div class="body" data-wn="${w.n}"><div class="it-hint">點一下那一行（或最右邊的圓圈）標記完成，這行會劃掉；再點一次取消。點連結照常開啟。只存在這台裝置</div>${bodyHtml(w, "hero")}</div>`;
+    <div class="hero-sub">${sub}</div></div><div class="body" data-wn="${w.n}">${bodyHtml(w, "hero")}</div>`;
 }
 function renderFilters() {
   const opts = [{ k: "all", label: "全部" }, ...TYPES.map(t => ({ k: t.k, label: `${t.icon} ${t.name}` }))];
