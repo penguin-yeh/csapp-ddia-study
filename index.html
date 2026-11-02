@@ -159,7 +159,8 @@ pre{margin:0;font:.82rem/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospa
 .dlt th{color:var(--muted);font-weight:500}
 .dlt td:first-child{white-space:nowrap;font-weight:600}
 /* 事項勾選：每行最右邊一個圓圈 */
-.it{position:relative;padding-right:42px;min-height:34px}
+.it{position:relative;padding-right:42px;min-height:34px;cursor:pointer;border-radius:6px;transition:background .12s;-webkit-tap-highlight-color:transparent}
+.it:hover{background:color-mix(in srgb,var(--fg) 4%,transparent)}
 li.it{margin-bottom:3px}
 .gl{display:block}
 .it .ck{position:absolute;right:0;top:-3px;width:32px;height:32px;padding:0;margin:0;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;text-decoration:none}
@@ -818,7 +819,7 @@ function renderHero() {
   else if (!cur) { kicker = "計畫已結束"; }
   $("hero").innerHTML = `<div class="hero-hd">${checkbox(w)}<span class="kicker">${kicker}</span>
     <span class="hero-title">W${w.n} · ${esc(w.title)}</span>${localBadge(w)}
-    <div class="hero-sub">${sub}</div></div><div class="body" data-wn="${w.n}"><div class="it-hint">按每行最右邊的圓圈標記完成（這行會劃掉），再按一次取消；只存在這台裝置</div>${bodyHtml(w, "hero")}</div>`;
+    <div class="hero-sub">${sub}</div></div><div class="body" data-wn="${w.n}"><div class="it-hint">點一下那一行（或最右邊的圓圈）標記完成，這行會劃掉；再點一次取消。點連結照常開啟。只存在這台裝置</div>${bodyHtml(w, "hero")}</div>`;
 }
 function renderFilters() {
   const opts = [{ k: "all", label: "全部" }, ...TYPES.map(t => ({ k: t.k, label: `${t.icon} ${t.name}` }))];
@@ -913,9 +914,13 @@ function toggleItem(el) {
   renderItemCounts();
 }
 document.addEventListener("click", e => {
-  const ck = e.target.closest && e.target.closest(".it > .ck"); if (!ck) return;
-  e.preventDefault(); e.stopPropagation();
-  toggleItem(ck.parentElement);
+  const el = e.target.closest && e.target.closest(".it"); if (!el) return;
+  const ck = e.target.closest(".ck");
+  if (ck && ck.parentElement === el) { e.preventDefault(); e.stopPropagation(); toggleItem(el); return; }
+  if (e.target.closest("a, button, input, label, summary, select, textarea")) return;
+  const sel = window.getSelection && window.getSelection();
+  if (sel && !sel.isCollapsed && String(sel).trim()) return;
+  toggleItem(el);
 });
 function renderAll() { renderProgress(); renderHero(); renderFilters(); renderList(); decorate(); }
 
