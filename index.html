@@ -60,7 +60,10 @@ button{font:inherit;cursor:pointer}
 
 /* hero */
 .hero{margin-top:22px;border:2px solid var(--hl);overflow:clip;box-shadow:0 14px 28px -20px color-mix(in srgb,var(--hl) 70%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--hl) 7%,var(--card)),var(--card) 90px)}
-.hero-hd{padding:16px 22px 14px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.hero-hd{position:relative;padding:16px 44px 14px 22px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;list-style:none;cursor:pointer}
+.hero-hd::-webkit-details-marker{display:none}
+.hero-hd::after{content:"›";position:absolute;right:18px;top:16px;font-size:1.3rem;color:var(--muted);transition:transform .15s;line-height:1}
+.hero[open]>.hero-hd::after{transform:rotate(90deg)}
 .kicker{font:700 .78rem/1 var(--mono);letter-spacing:.06em;color:#000;background:var(--hl);border-radius:6px;padding:3px 8px}
 .hero-title{font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.4}
 .hero-sub{width:100%;color:var(--muted);font-size:.88rem;margin-top:-4px}
@@ -239,7 +242,8 @@ details.about[open]>summary::before{content:"▾ "}
   .prog{padding:14px 16px}
   .pr{grid-template-columns:1fr auto;gap:2px 10px}
   .pr .bar{grid-column:1/-1;grid-row:2}
-  .hero-hd{padding:14px 16px 12px}
+  .hero-hd{padding:14px 40px 12px 16px}
+  .hero-hd::after{right:14px;top:14px}
   .week>summary{grid-template-columns:auto 2.6em 1fr auto;padding:10px 12px;gap:8px}
   .week>summary .chips{grid-column:3/-1;grid-row:2;justify-content:flex-start}
   .week>summary::after{grid-column:4;grid-row:1}
@@ -286,7 +290,7 @@ details.about[open]>summary::before{content:"▾ "}
     <div class="pr p2"><span class="nm">DDIA 2e</span><div class="bar"><span id="p2Bar"></span></div><span class="num" id="p2Txt"></span></div>
   </section>
 
-  <section class="card hero" id="hero"></section>
+  <details class="card hero" id="hero" open></details>
 
   <h2>每週清單</h2>
   <div class="filters" id="filters" role="toolbar" aria-label="依類型篩選"></div>
@@ -853,9 +857,9 @@ function renderHero() {
   let kicker = "本週", sub = range(w);
   if (idx < 0) { kicker = "即將開始"; sub = `${range(w)} · 還有 ${Math.round((START - today) / DAY)} 天`; }
   else if (!cur) { kicker = "計畫已結束"; }
-  $("hero").innerHTML = `<div class="hero-hd">${checkbox(w)}<span class="kicker">${kicker}</span>
+  $("hero").innerHTML = `<summary class="hero-hd">${checkbox(w)}<span class="kicker">${kicker}</span>
     <span class="hero-title">W${w.n} · ${esc(w.title)}</span>${localBadge(w)}
-    <div class="hero-sub">${sub}</div></div><div class="body" data-wn="${w.n}">${bodyHtml(w, "hero")}</div>`;
+    <div class="hero-sub">${sub}</div></summary><div class="body" data-wn="${w.n}">${bodyHtml(w, "hero")}</div>`;
 }
 function renderFilters() {
   const opts = [{ k: "all", label: "全部" }, ...TYPES.map(t => ({ k: t.k, label: `${t.icon} ${t.name}` }))];
