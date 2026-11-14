@@ -13,30 +13,49 @@
 3. 影片／筆記連結（`.t-video`／`.t-rec`／`.t-reading` 區塊）要核對過真的存在、對應得上，不可編造不存在的連結。
 4. 深色模式用 `@media (prefers-color-scheme:dark)` 覆寫 `:root`，兩套 token 要同步更新，不要只改亮色版。
 
-## 1. 設計 token（取自 `index.html` 實際 `:root`）
+## 1. 設計方向：「工程筆記本」（2026-11 改版）
+
+舊版是預設管理後台感（純灰底、白卡片、單一藍色強調、純系統字體），改成有紙感、有層次的
+「工程筆記本／logbook」：暖紙色底＋極淡的點狀紋理、serif 大標題、mono 數字與週次標籤、
+卡片用陰影做出層次，互動元件（按鈕、filter chip、連結、解鎖表單）都要有明確的 hover／focus
+效果。**之後再調整風格，先維持這個方向，不要退回純灰階後台風。**
+
+## 2. 設計 token（取自 `index.html` 實際 `:root`）
 
 亮色：
 
 | 用途 | 值 |
 |---|---|
-| 背景 | `--bg:#f6f7f9` |
-| 卡片 | `--card:#fff` |
-| 主文字 | `--fg:#1a1c20` |
-| 次文字 | `--fg2:#4a4f5a` |
-| 弱化文字 | `--muted:#6b7280` |
-| 分隔線 | `--line:#e5e7eb` |
-| 強調（連結／進度條） | `--accent:#2563eb` |
-| 完成勾選 | `--ok:#16a34a` |
-| 本週高光 | `--hl:#f59e0b` |
+| 背景（暖紙色＋點狀紋理） | `--bg:#f1ebdd` |
+| 卡片 | `--card:#fffdf6` |
+| 主文字 | `--fg:#201d17` |
+| 次文字 | `--fg2:#56544a` |
+| 弱化文字 | `--muted:#8a8373` |
+| 分隔線 | `--line:#ddd3bb` |
+| 淺底色塊 | `--soft:#ece3cc` |
+| 強調（連結／進度條／焦點框） | `--accent:#28415f`（深藍墨水色） |
+| 完成勾選 | `--ok:#1f7a4c` |
+| 本週高光 | `--hl:#b8790a`（琥珀） |
+| 進度軌道底色 | `--track:#e4d9bd` |
+| 卡片陰影 | `--shadow:0 1px 2px rgba(32,24,10,.05),0 14px 30px -20px rgba(32,24,10,.35)` |
 
-內容類型色（`.t-xxx` 用 `--c` 這個 CSS 變數套色，見第 2 節）：
+深色模式每個 token 都有對應覆寫（`--bg:#13171c`、`--accent:#7fb0dd`、`--shadow` 换成內嵌高光＋深色陰影……），新增 token 時兩邊都要補。
+
+內容類型色（`.t-xxx` 用 `--c` 這個 CSS 變數套色，見第 3 節，**維持原值沒變**）：
 `--c-video:#dc2626`　`--c-rec:#4f46e5`　`--c-read:#2563eb`　`--c-lab:#7c3aed`　`--c-build:#c2410c`　`--c-note:#0f766e`　`--c-reading:#be185d`　`--c-algo:#15803d`　`--c-sys:#a16207`　`--c-beh:#0e7490`
 
-深色模式每個 token 都有對應覆寫（例如 `--bg:#0e1014`、`--accent:#60a5fa`），新增 token 時兩邊都要補。
+字體三層：
+- 內文／UI 無襯線：`-apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", "Heiti TC", "Segoe UI", sans-serif`
+- 大標題／hero 標題用 `--serif`：`"Noto Serif TC", "Songti TC", Georgia, serif`
+- 週次編號、進度數字、程式碼用 `--mono`：`ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`
 
-字體：無襯線 `-apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", "Heiti TC", "Segoe UI", sans-serif`；程式碼用 `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`。
+版面細節：
+- `body` 背景疊一層極淡的點狀紋理（`radial-gradient` 小圓點，`color-mix(in srgb,var(--fg) 7%,transparent)`），不要加大透明度到看得出明顯紋理、也不要換成格線或其他圖案。
+- `.top` 標頭用 `border-bottom:3px double var(--fg)` 雙線分隔，上面加一行 mono 小標 `.kicker-top`（例如「Engineering Logbook」），風格呼應但不抄襲 daily-news 的「晨間電訊」雙線。
+- `.card`／`.week`／`.fitem` 都套 `box-shadow:var(--shadow)` 做出卡片懸浮感，不要拿掉改回純邊框。
+- 所有可互動元素（`.btn`／`.fchip`／`.secnav a`／`.links a`／`.gbox input`／`.gbox button`）都要有 `transition` + 明確的 `:hover`／`:focus-visible` 樣式，不可以只有預設瀏覽器行為。
 
-## 2. 內容區塊類型（`.blk.t-xxx`）
+## 3. 內容區塊類型（`.blk.t-xxx`）
 
 每段內容用 `.blk` 卡片＋ `.t-xxx` 決定左側色條與標籤色：
 
@@ -55,7 +74,7 @@
 
 新增內容一律套用對應的 `.t-xxx`，不要混用或自己發明新的顏色。
 
-## 3. 結構元件
+## 4. 結構元件
 
 - **進度條**（`.prog`／`.pr`／`.bar`）：整體進度用 `.pr.all`（粗條），分支（CSAPP 階段 vs 面試準備軌道）用 `.pr.p2`。
 - **本週重點**（`.hero`）：用 `--hl` 橙框標出「現在進行中」的那一週，離開這一週要記得把 `.hero` 移到新的一週。
@@ -63,6 +82,6 @@
 - **段落 navigation**（`.secnav`）：sticky 錨點列，手機寬度（≤640px）隱藏（`@media (max-width:640px){.secnav{display:none}}`），新增段落時要同步在這裡加一個錨點。
 - **badge**：`.b-now`（進行中）、`.b-local`（只在本機、虛線框）、`.b-two`（跨兩週）——意義要跟實際狀態一致，不要照抄舊的。
 
-## 4. 響應式
+## 5. 響應式
 
 `@media (max-width:640px)` 已經處理了手機版的 padding 收窄、`.secnav` 隱藏、`.spec`／`.kv` 兩欄變單欄。新增區塊要檢查在手機寬度下有沒有橫向捲軸或擠在一起。
