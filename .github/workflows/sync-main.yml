@@ -1,0 +1,39 @@
+name: Sync claude branches into main
+
+# csapp-ddia-study 不是「每天一份固定檔名快照」的站（內容分散在 notes/specs/csapp-labs/ddia-labs
+# 各處，檔名不固定），所以不能像 daily-news 那樣白名單同步特定檔案。
+# 這個 workflow 改用 fast-forward merge：如果產生進度的 session 被限制在 claude/* 分支上開發，
+# 自動把該分支合併進 main，讓內容真正落地、觸發 Pages 重新部署。
+# 只做 fast-forward（--ff-only）：如果 main 同時有其他變更造成無法 fast-forward，
+# 就讓這個 job 失敗並保留原狀，不自動解衝突、不覆蓋 main 上別人已經寫入的內容。
+on:
+  push:
+    branches: ['claude/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: csapp-ddia-study-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Fetch source branch
+        run: git fetch origin "+refs/heads/${GITHUB_REF_NAME}:refs/remotes/origin/${GITHUB_REF_NAME}"
+      - name: Fast-forward main to the claude branch
+        run: |
+          if git merge-base --is-ancestor HEAD "origin/${GITHUB_REF_NAME}"; then
+            git merge --ff-only "origin/${GITHUB_REF_NAME}"
+            git push origin HEAD:main
+          else
+            echo "main 已經比 ${GITHUB_REF_NAME} 新，或兩邊已分岔，無法 fast-forward——不自動覆蓋，請手動處理。"
+            exit 1
+          fi
