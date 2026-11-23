@@ -43,6 +43,18 @@ CSAPP Ch4（處理器架構）先略過，對後端面試幫助小；Ch5、Ch7 �
 
 每週一推一份技術精讀（新的在上面），在 [進度頁](https://penguin-yeh.github.io/csapp-ddia-study/) 會放進對應那一週的卡片裡（📰 本週精讀）。
 
+### 2026/11/23 · W1 位元與整數 · 論文 · 約 60 分鐘
+
+**[HyperLogLog: the analysis of a near-optimal cardinality estimation algorithm](https://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf)**（Philippe Flajolet, Éric Fusy, Olivier Gandouet, Frédéric Meunier（AofA 2007））
+
+- **為什麼值得讀**：論文摘要說：只用 1.5 KB 記憶體，就能估出超過 10^9 個不重複元素，誤差約 2%。核心技巧其實很「Data Lab」：把元素 hash 成一串位元，前幾個位元決定放哪個暫存器，剩下的位元數「最左邊的 1 在第幾位」。Redis 的 PFADD／PFCOUNT 就是它的實作，系統設計面試問「每天有多少不重複使用者」時，這也是最常見的解法。你還在 W1，剛好用位元的角度讀它。
+- **閱讀重點**
+  1. Fig. 2：m = 2^b 個暫存器，hash 值的前 b 個位元當暫存器編號，剩下的位元 w 算 ρ(w)（最左邊 1 的位置），每個暫存器只留最大值。想想看：為什麼「看過開頭連續 k 個 0」大約代表見過 2^k 個不同元素？
+  2. 合併估計：用調和平均 E = α_m · m² · (Σ 2^(−M[j]))^(−1)，標準誤差約 1.04/√m。自己算算 m = 2048 時誤差多少，以及為什麼每個暫存器只要 5 bits 左右就夠（摘要表格寫 ≤5 bits）
+  3. §4 Discussion 的 Figure 3：暫存器改成從 0 開始、估計值 ≤ 5m/2 時改用 linear counting 的 small range correction，以及 32-bit hash 接近 2^32 時的 large range correction。這些是把數學變成能上線的程式時補上的洞
+- **讀完動手**：用 C 寫一個迷你 HLL：`uint8_t reg[1 << 14]`，`hll_add(uint64_t h)` 用低 14 位元當暫存器索引，右移 14 位後用 `__builtin_ctzll(h) + 1`（或你 popcount 小專案裡的位元技巧）算 ρ，記得先把最高位補 1 避免全 0。用 splitmix64 把 0..10^6−1 打散後餵進去，印出估計值和相對誤差，看有沒有落在 1.04/√16384 ≈ 0.81% 附近。加分：把暫存器壓成 6-bit 緊密排列，對照下面選讀 Redis 的 `HLL_DENSE_GET_REGISTER`。
+- **選讀**：[Redis 原始碼：src/hyperloglog.c（Redis 7.2.5）](https://github.com/redis/redis/blob/7.2.5/src/hyperloglog.c)，約 30 分鐘。先讀檔案開頭講 dense／sparse 表示法的長註解，再看 `hllPatLen`（L452）怎麼用 MurmurHash64A 加上數尾端 0 算出 ρ，最後看 `HLL_DENSE_GET_REGISTER`（L339）怎麼把 6-bit 暫存器跨位元組取出來，全都是 Data Lab 的 shift 和 mask。
+
 ### 2026/11/02 · W1 位元與整數 · 原始碼 · 約 60 分鐘
 
 **[Redis 原始碼：src/bitops.c（BITCOUNT／BITFIELD 的位元運算）](https://github.com/redis/redis/blob/7.2.5/src/bitops.c)**（Redis 7.2.5）
