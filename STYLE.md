@@ -12,6 +12,14 @@
 2. 進度資訊（哪週做完、哪個 Lab 卡關）要跟 `README.md` 的 30 週表、`specs/W*.md`、`notes/` 底下的實際內容一致，不可以憑空標成「已完成」。
 3. 影片／筆記連結（`.t-video`／`.t-rec`／`.t-reading` 區塊）要核對過真的存在、對應得上，不可編造不存在的連結。
 4. 深色模式用 `@media (prefers-color-scheme:dark)` 覆寫 `:root`，兩套 token 要同步更新，不要只改亮色版。
+5. `<head>` 在 `</title>` 之後必須有本站 favicon 這四行（檔案在 repo 根目錄）。舊的 icon 連結要換掉：
+
+```html
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="site.webmanifest">
+```
 
 ## 1. 設計方向：「工程筆記本」（2026-11 改版）
 
